@@ -1,0 +1,1 @@
+[Novo Nordisk's company overview](https://annualreport.novonordisk.com/2025/strategic-aspirations/innovation-and-therapeutic-focus.html) describes peptide-focused research and medicines. That evidence supports a peptide business but does not establish that AI was used for a specific peptide program.

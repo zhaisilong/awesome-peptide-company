@@ -1,0 +1,12 @@
+entity_id,alias,lang,kind,valid_from,valid_to,evidence_ids
+ailsynbio,AilsynBio Limited,en,variant,,,hkcr-20251208-ailsynbio-registration
+ailsynbio,昂心生物,zh,zh_name,,,hkex-20261113-hansoh-ailsynbio
+ailsynbio,昂心生物有限公司,zh,zh_name,2026-04-10,,hkcr-20260413-ailsynbio-name
+anew-labs,Anew Therapeutics,en,variant,,,scmp-20260502-bytedance-drug-unit
+anew-labs,ByteDance AI Drug Discovery,en,variant,,,scmp-20260502-bytedance-drug-unit
+anew-labs,新生实验室,zh,zh_name,,,anew-labs-website
+astrazeneca-molecular-ai,MolecularAI,en,variant,,,github-molecularai-org
+bytedance-ai4s-team,ByteDance AML AI4Science Team,en,variant,,,github-bytedance-protenix
+peptway,杭州肽为生物科技有限公司,zh,zh_name,,,peptway-20261105-forum
+peptway,肽为生物,zh,zh_name,,,peptway-about
+syneron-bio,元思生肽,zh,zh_name,,,sina-20251211-syneron-series-a

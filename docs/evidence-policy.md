@@ -11,3 +11,5 @@ A claim can be `confirmed` with an A source or two independent B origins, `repor
 Use `claimed`, `documented`, and `verified` to distinguish stated loop capability from detailed documentation and independently reusable public outputs. Agent-created assessments require maintainer review.
 
 The derived `active` status means that qualifying public activity has been recorded and no confirmed terminal event supersedes it; it is not proof that an organization currently operates. `last_verified` is the latest eligible source access date, not a date on which continued operations were verified. Old evidence may trigger a review warning, but does not automatically change status.
+
+The machine-readable status `unknown` is displayed as “Not assessed”: no confirmed status event has been recorded. It does not mean that the organization is inactive or that its existence is in doubt.

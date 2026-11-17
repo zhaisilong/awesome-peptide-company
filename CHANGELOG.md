@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.2
+
+- Survey pharmaceutical organizations and distinguish evidence of AI-related peptide work from peptide activities with an unconfirmed AI connection.
+- Add directory-scope browsing and company profiles while preserving historical knowledge and existing data export columns.
+- Improve the company curation skill for user-requested discovery and snapshot-aware verification.
+
 ## 0.3.1
 
 - Review company evidence, clarify reported dates and group relationships, and document PepStar as a candidate pending AI evidence.

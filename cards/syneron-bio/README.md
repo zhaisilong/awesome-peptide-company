@@ -1,6 +1,6 @@
 # Syneron Bio
 
-[← Home](../../README.md) · [Browse by type](../../index/by-type.md) · [By status](../../index/by-status.md) · [By modality](../../index/by-modality.md)
+[← Home](../../README.md) · [By scope](../../index/by-scope.md) · [Browse by type](../../index/by-type.md) · [By status](../../index/by-status.md) · [By modality](../../index/by-modality.md)
 
 Macrocyclic peptide company with the Synova platform and an AstraZeneca collaboration.
 
@@ -19,6 +19,8 @@ Macrocyclic peptide company with the Synova platform and an AstraZeneca collabor
 
 
 ## Peptide relevance and tags
+
+**Directory scope:** AI–peptide work [cls-20260518-syneron-ai](https://www.cls.cn/detail/2373614)
 
 **Relevance:** Core.
 
@@ -52,6 +54,7 @@ No papers linked.
 - **A** [Syneron Bio Announces Strategic Collaboration with AstraZeneca](https://www.biospace.com/press-releases/syneron-bio-announces-strategic-collaboration-with-astrazeneca) · PR Newswire (via BioSpace) · accessed 2026-11-17
 - **A** [Syneron Bio Closes Nearly $100M in Series A and A+ Rounds](https://www.prnewswire.com/news-releases/syneron-bio-closes-nearly-100m-in-series-a-and-a-rounds-302646092.html) · PR Newswire · accessed 2026-11-17
 - **A** [Syneron Bio Announces Completion of $150 Million Series B Financing](https://www.prnewswire.com/news-releases/syneron-bio-announces-completion-of-150-million-series-b-financing-302733591.html) · PR Newswire · accessed 2026-11-17
+- **B** [AI制药祛魅时刻：从概念验证“讲故事”迈向临床验证“见现实” 新疗法正加速突破](https://www.cls.cn/detail/2373614) · 财联社 · accessed 2026-11-17
 - **B** [元思生肽完成A轮及A+轮近亿美元融资](https://finance.sina.com.cn/roll/2025-12-11/doc-inhamxqc6402996.shtml) · Securities Times via Sina Finance · accessed 2026-11-17
 
 ## Curator notes
@@ -59,3 +62,5 @@ No papers linked.
 *Editorial opinion.*
 
 The company's [Series B announcement](https://www.prnewswire.com/news-releases/syneron-bio-announces-completion-of-150-million-series-b-financing-302733591.html) lists a company website, but that site could not be independently opened during this review. Headquarters and founding date remain unconfirmed; the announcement mentions a Beijing research center, which does not establish headquarters.
+
+In a [2026 interview](https://www.cls.cn/detail/2373614), Syneron described its own use of AI in peptide research. This is a company statement reported by a media outlet, not an independent validation or a basis for assigning a loop level.

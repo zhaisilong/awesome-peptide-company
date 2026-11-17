@@ -93,6 +93,29 @@ def test_fixture_renders_competing_maintainers_and_parent_scope():
     assert "AstraZeneca gets access to Synova" in outputs["cards/syneron-bio/README.md"].decode()
 
 
+def test_related_events_remain_attributed_and_mark_original_supersession():
+    tables = fixture()
+    for row in tables["entities"]:
+        if row["entity_id"] in {"astrazeneca", "bytedance"}:
+            row["inclusion"] = "full"
+    outputs = render(tables, resolve(tables, "2026-11-17"), "2026-11-17",
+                     "# Fixture\n<!-- BEGIN:INDEX -->\n<!-- END:INDEX -->\n", ROOT)
+    group = outputs["cards/astrazeneca/README.md"].decode()
+    timeline = group.split("## Timeline", 1)[1].split("## Related papers", 1)[0]
+    assert "Related record (subject: Syneron Bio) · Confirmed: AstraZeneca gets access to Synova" in timeline
+    assert "Value is the upfront and near-term part only." in timeline
+    assert "[prnewswire-20250321-syneron-astrazeneca]" in timeline
+    owner = outputs["cards/syneron-bio/README.md"].decode()
+    owner_timeline = owner.split("## Timeline", 1)[1].split("## Related papers", 1)[0]
+    assert "Related record (subject: Syneron Bio)" not in owner_timeline
+    team = outputs["cards/astrazeneca-molecular-ai/README.md"].decode()
+    team_timeline = team.split("## Timeline", 1)[1].split("<summary>Parent organization relationships</summary>", 1)[0]
+    assert "AstraZeneca gets access to Synova" not in team_timeline
+    bytedance = outputs["cards/bytedance/README.md"].decode()
+    line = next(line for line in bytedance.splitlines() if "First public report that ByteDance" in line)
+    assert "Related record (subject: Anew Labs)" in line and "Superseded." in line
+
+
 def test_fixture_contains_no_prohibited_commercial_content():
     import re
     tables = fixture()

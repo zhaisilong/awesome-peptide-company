@@ -1,5 +1,6 @@
 category,value
 entity_type,ai_native_biotech
+entity_type,pharma_company
 entity_type,pharma_ai_team
 entity_type,bigtech_ai_team
 entity_type,peptide_therapeutics
@@ -90,6 +91,8 @@ relation,benchmarked
 relation,related
 unit,usd_m
 unit,pct
+directory_scope,ai_peptide
+directory_scope,peptide_landscape
 modality,macrocyclic_peptide
 modality,linear_peptide
 modality,stapled_peptide

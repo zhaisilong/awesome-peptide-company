@@ -1,0 +1,1 @@
+The [official Protenix README](https://github.com/bytedance/Protenix) contains conflicting license language: its general license section describes Apache-2.0 for the project, while its Protenix-v2 update says v2 weights are proprietary and restricted. The catalog does not assign a single license to all versions and weights; consult the rights holder for clarification.

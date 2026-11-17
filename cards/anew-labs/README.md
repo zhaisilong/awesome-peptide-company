@@ -1,6 +1,6 @@
 # Anew Labs
 
-[← Home](../../README.md) · [Browse by type](../../index/by-type.md) · [By status](../../index/by-status.md) · [By modality](../../index/by-modality.md)
+[← Home](../../README.md) · [By scope](../../index/by-scope.md) · [Browse by type](../../index/by-type.md) · [By status](../../index/by-status.md) · [By modality](../../index/by-modality.md)
 
 AI drug discovery company with peptide-related research and experimental programmes.
 
@@ -19,6 +19,8 @@ AI drug discovery company with peptide-related research and experimental program
 
 
 ## Peptide relevance and tags
+
+**Directory scope:** AI–peptide work [anew-labs-dpsa](https://anewbt.com/research/dpsa/)
 
 **Relevance:** Infrastructure. [anew-labs-dpsa](https://anewbt.com/research/dpsa/)
 

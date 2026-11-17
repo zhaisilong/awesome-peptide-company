@@ -197,7 +197,7 @@ def validate(root, as_of=None, base_ref=None):
                 if (not value and (table, field) not in optional_enums) or (value and value not in vocabulary.get(category, set())):
                     add('E02', f'{loc}: invalid {field} {value!r}')
             if table == 'tags':
-                if row['facet'] not in {'modality','dry','wet','therapeutic_area','stage_max'} or row['value'] not in vocabulary.get(row['facet'], set()):
+                if row['facet'] not in {'directory_scope','modality','dry','wet','therapeutic_area','stage_max'} or row['value'] not in vocabulary.get(row['facet'], set()):
                     add('E02', f"{loc}: invalid tag {row['facet']}:{row['value']}")
             for field, target in refs.get(table, {}).items():
                 if row[field] and row[field] not in ids[target]:
@@ -246,6 +246,16 @@ def validate(root, as_of=None, base_ref=None):
                 add('E10', f'{loc}: relevance evidence required')
             if table == 'loop_assessments' and row['review_status'] == 'proposed' and _datestr(row['as_of']) and (today - _datestr(row['as_of'])).days > 30:
                 add('W05', f'{loc}: proposed assessment is over 30 days old', 'warning')
+    scope_counts = {}
+    for row in tables['tags']:
+        if row['facet'] == 'directory_scope':
+            scope_counts[row['entity_id']] = scope_counts.get(row['entity_id'], 0) + 1
+    for entity in tables['entities']:
+        eid = entity['entity_id']
+        if scope_counts.get(eid, 0) > 1:
+            add('E12', f'entity {eid}: multiple directory scope values')
+        if entity['inclusion'] == 'full' and entity['entity_type'] == 'pharma_company' and not scope_counts.get(eid):
+            add('E10', f'entity {eid}: pharmaceutical company requires a directory scope with evidence')
     # Use the same resolver as rendering; skip W03 if invalid data would be resolved.
     if not any(issue.severity == 'error' for issue in issues):
         from .resolve import resolve

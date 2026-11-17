@@ -1,6 +1,6 @@
 # AilsynBio
 
-[← Home](../../README.md) · [Browse by type](../../index/by-type.md) · [By status](../../index/by-status.md) · [By modality](../../index/by-modality.md)
+[← Home](../../README.md) · [By scope](../../index/by-scope.md) · [Browse by type](../../index/by-type.md) · [By status](../../index/by-status.md) · [By modality](../../index/by-modality.md)
 
 Hong Kong AI-native biotechnology company focused on peptide therapeutics.
 
@@ -19,6 +19,8 @@ Hong Kong AI-native biotechnology company focused on peptide therapeutics.
 
 
 ## Peptide relevance and tags
+
+**Directory scope:** AI–peptide work [hkex-20261113-hansoh-ailsynbio](https://www1.hkexnews.hk/listedco/listconews/sehk/2026/1113/2026111300947.pdf)
 
 **Relevance:** Core. [hkex-20261113-hansoh-ailsynbio](https://www1.hkexnews.hk/listedco/listconews/sehk/2026/1113/2026111300947.pdf)
 

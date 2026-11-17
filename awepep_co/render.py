@@ -14,25 +14,25 @@ from liquid import Template
 from .resolve import event_key, latest_date, interval_contains
 
 BEGIN, END = "<!-- BEGIN:INDEX -->", "<!-- END:INDEX -->"
-INDEX_NAV = "[← Home](../README.md) · [Types](by-type.md) · [Status](by-status.md) · [Modalities](by-modality.md)"
+INDEX_NAV = "[← Home](../README.md) · [Scope](by-scope.md) · [Types](by-type.md) · [Status](by-status.md) · [Modalities](by-modality.md)"
 RESOLVED_COLUMNS = ["entity_id", "name", "entity_type", "inclusion", "parent_id", "peptide_relevance", "relevance_evidence_ids", "country", "hq_city", "website", "one_liner", "current_status", "status_since", "pending_flags", "last_verified", "needs_review", "successors", "predecessors"]
 INDEX_COLUMNS = ["entity_id", "name", "one_liner", "entity_type", "current_status", "loop_level", "peptide_relevance", "country", "last_verified"]
 
 # Presentation labels are separate from source vocabulary and data exports.
 DISPLAY_LABELS = {
     "entity_type": {
-        "ai_native_biotech": "AI-native biotech", "pharma_ai_team": "Pharmaceutical AI team",
+        "ai_native_biotech": "AI-native biotech", "pharma_ai_team": "Pharmaceutical AI team", "pharma_company": "Pharmaceutical company",
         "bigtech_ai_team": "Technology company AI team", "peptide_therapeutics": "Peptide therapeutics",
         "platform_vendor": "Platform vendor", "cdmo": "CDMO", "parent_org": "Parent organization",
     },
     "status": {
         "active": "Active", "in_transition": "In transition", "inactive": "Inactive",
-        "closed": "Closed", "acquired": "Acquired", "merged": "Merged", "unknown": "Unknown",
+        "closed": "Closed", "acquired": "Acquired", "merged": "Merged", "unknown": "Not assessed",
     },
     "relevance": {"core": "Core", "adjacent": "Adjacent", "infrastructure": "Infrastructure"},
     "facet": {
         "modality": "Modality", "dry": "Computational methods", "wet": "Experimental capabilities",
-        "therapeutic_area": "Therapeutic area", "stage_max": "Development stage",
+        "therapeutic_area": "Therapeutic area", "stage_max": "Development stage", "directory_scope": "Directory scope",
     },
     "tag": {
         "macrocyclic_peptide": "Macrocyclic peptide", "linear_peptide": "Linear peptide",
@@ -43,6 +43,8 @@ DISPLAY_LABELS = {
         "foundation_model_inhouse": "In-house foundation model",
         "cmc": "CMC", "llm_agent": "LLM agent", "phase1": "Phase 1",
         "phase2": "Phase 2", "phase3": "Phase 3", "na": "Not applicable",
+        "ai_peptide": "AI–peptide work", "peptide_landscape": "Peptide landscape · AI link unverified",
+        "unassessed": "Scope pending review",
     },
     "review": {"proposed": "pending review", "reviewed": "reviewed"},
 }
@@ -129,6 +131,11 @@ def render(tables, resolved, as_of, readme, root, template_root=None):
     evidence = {row["evidence_id"]: row for row in tables.get("evidence", [])}
     asset_map = {row["asset_id"]: row for row in tables.get("assets", [])}
     full = sorted((e for e in resolved if e.get("inclusion") == "full"), key=lambda e: e["entity_id"])
+    scope_tags = {r["entity_id"]: r for r in sorted(tables.get("tags", []), key=lambda r: (r.get("entity_id", ""), r.get("value", ""))) if r.get("facet") == "directory_scope"}
+    scope_rows = [{"entity_id": e["entity_id"], "name": e.get("name", ""),
+                   "directory_scope": scope_tags.get(e["entity_id"], {}).get("value", "unassessed"),
+                   "evidence_ids": scope_tags.get(e["entity_id"], {}).get("evidence_ids", "")} for e in full]
+    scopes = {r["entity_id"]: r["directory_scope"] for r in scope_rows}
     events = sorted([e for e in tables.get("events", []) if latest_date(e) <= as_of], key=event_key)
     loops = defaultdict(list)
     for row in tables.get("loop_assessments", []):
@@ -141,23 +148,31 @@ def render(tables, resolved, as_of, readme, root, template_root=None):
     out["build/entities_resolved.csv"] = _csv(resolved, RESOLVED_COLUMNS)
     out["index/index.csv"] = _csv(rows, INDEX_COLUMNS)
     out["index/index.json"] = (json.dumps([{k: row.get(k, "") for k in INDEX_COLUMNS} for row in rows], ensure_ascii=False, indent=2) + "\n").encode()
+    scope_columns = ["entity_id", "name", "directory_scope", "evidence_ids"]
+    out["index/scopes.csv"] = _csv(scope_rows, scope_columns)
+    out["index/scopes.json"] = (json.dumps(scope_rows, ensure_ascii=False, indent=2) + "\n").encode("utf-8")
     out["build/peploop.sqlite"] = _sqlite(tables, resolved, root)
     indexlines = []
-    for row in rows:
-        metadata = [
-            _display("entity_type", row.get("entity_type")),
-            _display("status", row.get("current_status")),
-            _display("relevance", row.get("peptide_relevance")) + " relevance",
-        ]
-        if row.get("country"):
-            metadata.append(row["country"])
-        if row.get("pending_flags"):
-            metadata.append("⚠ Report pending confirmation")
-        indexlines.append("- **" + _anchor_link(row["entity_id"], entities, "cards") + "**<br>")
-        if row.get("one_liner"):
-            indexlines.append("  " + row["one_liner"] + "<br>")
-        indexlines.append("  " + " · ".join(metadata))
-        indexlines.append("")
+    for scope in ("ai_peptide", "peptide_landscape", "unassessed"):
+        group = [row for row in rows if scopes[row["entity_id"]] == scope]
+        if not group:
+            continue
+        indexlines.extend(["### " + _display("tag", scope), ""])
+        for row in group:
+            metadata = [
+                _display("entity_type", row.get("entity_type")),
+                _display("status", row.get("current_status")),
+                _display("relevance", row.get("peptide_relevance")) + " relevance",
+            ]
+            if row.get("country"):
+                metadata.append(row["country"])
+            if row.get("pending_flags"):
+                metadata.append("⚠ Report pending confirmation")
+            indexlines.append("- **" + _anchor_link(row["entity_id"], entities, "cards") + "**<br>")
+            if row.get("one_liner"):
+                indexlines.append("  " + row["one_liner"] + "<br>")
+            indexlines.append("  " + " · ".join(metadata))
+            indexlines.append("")
     indextext = "\n".join(indexlines).rstrip() + "\n" if indexlines else "No organizations recorded.\n"
     if readme.count(BEGIN) != 1 or readme.count(END) != 1 or readme.index(BEGIN) > readme.index(END):
         raise ValueError("README must contain one ordered BEGIN:INDEX and END:INDEX marker")
@@ -170,15 +185,19 @@ def render(tables, resolved, as_of, readme, root, template_root=None):
         aliases = sorted([r.get("alias", "") for r in tables.get("aliases", []) if r.get("entity_id") == eid and interval_contains(r.get("valid_from", ""), r.get("valid_to", ""), as_of)])
         loop = latest_loop.get(eid)
         banner = ""
-        if e["pending_flags"] or e["current_status"] != "active":
+        if e["pending_flags"] or e["current_status"] not in {"active", "unknown"}:
             flags = [ev for ev in own_events if ev.get("event_id") in e["pending_flags"]]
             banner = "> ⚠ Status: " + _display("status", e["current_status"]) + ". " + " ".join(("Rumor, unconfirmed: " if ev.get("confidence") == "rumor" else "Reported, unconfirmed: ") + ev.get("summary", "") for ev in flags) + "\n"
+        elif e["current_status"] == "unknown":
+            banner = "> Status not assessed: no confirmed status event has been recorded.\n"
         parent = entities.get(e.get("parent_id"), {})
         info = [("Headquarters", ", ".join(filter(None, [e.get("hq_city"), e.get("country")]))), ("Parent", parent.get("name", "")), ("Website", e.get("website", "")), ("Aliases", ", ".join(aliases)), ("Last verified", e.get("last_verified", ""))]
         overview = _table([{"key": key, "value": value or "—"} for key, value in info], ["Field", "Value"], ["key", "value"])
         tags = sorted((r.get("facet", ""), r.get("value", "")) for r in tables.get("tags", []) if r.get("entity_id") == eid)
         relevance_sources = ' '.join(f"[{i}]({evidence[i].get('url', '')})" for i in _list(e.get("relevance_evidence_ids", "")) if i in evidence)
-        relevance = "**Relevance:** " + _display("relevance", e.get("peptide_relevance")) + "." + (" " + relevance_sources if relevance_sources else "") + "\n\n" + ("\n".join(f"- **{_display('facet', facet)}:** {_display('tag', value)}" for facet, value in tags) or "No tags.")
+        scope_refs = " ".join(f"[{i}]({evidence[i].get('url', '')})" for i in _list(scope_tags.get(eid, {}).get("evidence_ids", "")) if i in evidence)
+        scope_line = "**Directory scope:** " + _display("tag", scopes[eid]) + (" " + scope_refs if scope_refs else "")
+        relevance = scope_line + "\n\n**Relevance:** " + _display("relevance", e.get("peptide_relevance")) + "." + (" " + relevance_sources if relevance_sources else "") + "\n\n" + ("\n".join(f"- **{_display('facet', facet)}:** {_display('tag', value)}" for facet, value in tags if facet != "directory_scope") or "No other tags.")
         looptext = f"**{loop.get('level')} · {loop.get('evidence_level')} · {_display('review', loop.get('review_status'))}** ({loop.get('as_of')})\n\n{loop.get('rationale', '')}" if loop else "Not assessed."
         roles = [r for r in tables.get("asset_roles", []) if r.get("entity_id") == eid and r.get("start", "") <= as_of.isoformat()]
         # Show all competing claims for each asset, including claims by other entities.
@@ -194,12 +213,16 @@ def render(tables, resolved, as_of, readme, root, template_root=None):
             refs = " ".join(f"[{x}]({evidence[x].get('url', '')})" for x in _list(role.get("evidence_ids", "")) if x in evidence)
             asset_lines.append(f"- {asset_name}: {role.get('role', '')} — {entities.get(role.get('entity_id'), {}).get('name', role.get('entity_id'))} ({flag}; {role.get('start', '')}–{role.get('end') or 'present'}). {refs}".rstrip())
         timeline = []
-        for ev in reversed(own_events):
+        timeline_events = [ev for ev in events if ev.get("entity_id") == eid or ev.get("related_entity_id") == eid]
+        for ev in reversed(timeline_events):
             label = {"reported": "Reported, unconfirmed", "rumor": "Rumor, unconfirmed", "confirmed": "Confirmed"}.get(ev.get("confidence"), ev.get("confidence", ""))
-            suffix = " Superseded." if ev.get("event_id") in e.get("superseded", []) else ""
+            subject_id = ev.get("entity_id", "")
+            subject = entities.get(subject_id, {})
+            related = f"Related record (subject: {subject.get('name') or subject_id}) · " if subject_id != eid else ""
+            suffix = " Superseded." if ev.get("event_id") in subject.get("superseded", []) else ""
             note = f" — {ev['note']}" if ev.get("note") else ""
             ids = " ".join(f"[{x}]({evidence[x].get('url', '')})" for x in _list(ev.get("evidence_ids", "")) if x in evidence)
-            timeline.append(f"- **{ev.get('date', '')}** · {label}: {ev.get('summary', '')}{note}{suffix} {ids}".rstrip())
+            timeline.append(f"- **{ev.get('date', '')}** · {related}{label}: {ev.get('summary', '')}{note}{suffix} {ids}".rstrip())
         parenttext = ""
         if e.get("entity_type") in {"pharma_ai_team", "bigtech_ai_team"} and parent:
             parent_events = [ev for ev in events if ev.get("event_type") in {"partnership", "license_deal", "ownership_disclosed", "funding_round"} and (ev.get("entity_id") == parent["entity_id"] or ev.get("related_entity_id") == parent["entity_id"])]
@@ -211,6 +234,8 @@ def render(tables, resolved, as_of, readme, root, template_root=None):
             awe = f" · [awesome-peptide](https://github.com/zhaisilong/awesome-peptide#{{}})".format(p['awepep_id']) if p.get('awepep_id') else ''
             papers.append(f"- [{p.get('doi', '')}]({link}) ({p.get('relation', '')}){awe}")
         cited = set(e.get("evidence_ids", []))
+        for ev in timeline_events:
+            cited.update(_list(ev.get("evidence_ids", "")))
         for role in relevant_roles:
             cited.update(_list(role.get("evidence_ids", "")))
         sources = []
@@ -239,6 +264,11 @@ def render(tables, resolved, as_of, readme, root, template_root=None):
             lines.extend(f"- {_anchor_link(eid, entities)}" for eid in sorted(group_rows[key]))
             lines.append("")
         out["index/" + filename] = ("\n".join(lines).rstrip() + "\n").encode("utf-8")
+
+    groups = defaultdict(set)
+    for e in full:
+        groups[scopes[e["entity_id"]]].add(e["entity_id"])
+    grouped("by-scope.md", "By directory scope", groups, "tag")
 
     for filename, title, field in [("by-type.md", "By type", "entity_type"), ("by-status.md", "By status", "current_status"), ("by-region.md", "By region", "country")]:
         groups = defaultdict(set)
@@ -282,9 +312,9 @@ def render(tables, resolved, as_of, readme, root, template_root=None):
             if ev.get("event_id") in entities[a].get("superseded", []):
                 continue
             label = ev.get("event_type")
-            # A group can provide context for a contract signed by a subsidiary.
+            # An event's subsidiary attribution does not change if its parent
+            # group is promoted from a stub to a full directory entry.
             if (label in {"partnership", "license_deal"}
-                    and entities[b].get("inclusion") == "stub"
                     and "subsidiary" in (ev.get("summary", "") + " " + ev.get("note", "")).lower()):
                 label = _display("event", label) + " (group context)"
             edges.add((a, b, label, ev.get("confidence", "")))

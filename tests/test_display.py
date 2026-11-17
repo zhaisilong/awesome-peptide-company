@@ -31,13 +31,16 @@ def test_homepage_lists_every_full_entity_in_stable_order():
     index = home.split("<!-- BEGIN:INDEX -->", 1)[1].split("<!-- END:INDEX -->", 1)[0]
     full = sorted((row for row in tables["entities"] if row["inclusion"] == "full"),
                   key=lambda row: row["entity_id"])
-    positions = []
+    positions = {}
     for row in full:
         link = f"cards/{row['entity_id']}/README.md"
         assert index.count(link) == 1
         assert row["name"] in index and row["one_liner"] in index
-        positions.append(index.index(link))
-    assert positions == sorted(positions)
+        positions[row['entity_id']] = index.index(link)
+    scopes = {row['entity_id']: row['value'] for row in tables['tags'] if row['facet'] == 'directory_scope'}
+    for scope in ('ai_peptide', 'peptide_landscape', 'unassessed'):
+        scoped = [positions[row['entity_id']] for row in full if scopes.get(row['entity_id'], 'unassessed') == scope]
+        assert scoped == sorted(scoped)
     assert "| Name | Summary |" not in index
     assert "ai_native_biotech" not in index
     assert "AI-native biotech" in index
@@ -72,6 +75,35 @@ def test_relationship_graph_distinguishes_group_context_and_reports_dates():
     peptway = next(line for line in changes.splitlines() if "Peptway" in line)
     assert "Publication date" in peptway
     assert "completion date" in peptway
+
+
+def test_group_context_remains_when_parent_groups_gain_full_cards():
+    tables = load_tables(ROOT)
+    for row in tables["entities"]:
+        if row["entity_id"] in {"hansoh-pharma", "astrazeneca"}:
+            row["inclusion"] = "full"
+    lineage = presentation(tables)["index/lineage.md"].decode()
+
+    def node(name):
+        match = re.search(r'^\s*(e\d+)\["' + re.escape(name) + r'"\](?!:::stub)', lineage, re.M)
+        assert match, name
+        return match.group(1)
+
+    ailsyn = node("AilsynBio")
+    hansoh = node("Hansoh Pharmaceutical Group")
+    syneron = node("Syneron Bio")
+    astrazeneca = node("AstraZeneca")
+    assert f'{ailsyn} -->|"License deal (group context)"| {hansoh}' in lineage
+    assert f'{ailsyn} -->|"License deal"| {hansoh}' not in lineage
+    assert f'{syneron} -->|"Partnership"| {astrazeneca}' in lineage
+    assert f'{syneron} -->|"Partnership (group context)"| {astrazeneca}' not in lineage
+
+    hansoh_card = presentation(tables)["cards/hansoh-pharma/README.md"].decode()
+    timeline = hansoh_card.split("## Timeline", 1)[1].split("## Related papers", 1)[0]
+    assert "Related record (subject: AilsynBio) · Confirmed" in timeline
+    assert "Hansoh Shanghai subsidiary licensed AilsynBio platform use" in timeline
+    assert "Maximum cumulative payment, not received revenue" in timeline
+    assert "[hkex-20261113-hansoh-ailsynbio]" in timeline
 
 
 def test_unknown_labels_have_readable_fallback():
@@ -123,7 +155,7 @@ def test_homepage_badges_navigation_and_star_history():
     assert "https://awesome.re/badge.svg" in home
     assert "github/stars/zhaisilong/awesome-peptide-company" in home
     assert "GPL-3.0" in home
-    for page in ("by-type.md", "by-status.md", "by-loop-level.md", "by-modality.md", "by-region.md", "assets.md", "lineage.md", "changes.md"):
+    for page in ("by-scope.md", "by-type.md", "by-status.md", "by-loop-level.md", "by-modality.md", "by-region.md", "assets.md", "lineage.md", "changes.md"):
         assert f"index/{page}" in home
     star_history = "https://api.star-history.com/svg?repos=zhaisilong/awesome-peptide-company&type=Date"
     decoded_home = html.unescape(home)

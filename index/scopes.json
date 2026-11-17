@@ -1,0 +1,86 @@
+[
+  {
+    "entity_id": "ailsynbio",
+    "name": "AilsynBio",
+    "directory_scope": "ai_peptide",
+    "evidence_ids": "hkex-20261113-hansoh-ailsynbio"
+  },
+  {
+    "entity_id": "anew-labs",
+    "name": "Anew Labs",
+    "directory_scope": "ai_peptide",
+    "evidence_ids": "anew-labs-dpsa"
+  },
+  {
+    "entity_id": "astrazeneca",
+    "name": "AstraZeneca",
+    "directory_scope": "ai_peptide",
+    "evidence_ids": "astrazeneca-20260227-peptide-ai"
+  },
+  {
+    "entity_id": "astrazeneca-molecular-ai",
+    "name": "AstraZeneca Molecular AI",
+    "directory_scope": "ai_peptide",
+    "evidence_ids": "github-molecularai-pepinvent"
+  },
+  {
+    "entity_id": "bristol-myers-squibb",
+    "name": "Bristol Myers Squibb",
+    "directory_scope": "ai_peptide",
+    "evidence_ids": "menten-20240528-bms-peptide"
+  },
+  {
+    "entity_id": "bytedance-ai4s-team",
+    "name": "ByteDance AI4S team",
+    "directory_scope": "unassessed",
+    "evidence_ids": ""
+  },
+  {
+    "entity_id": "eli-lilly",
+    "name": "Eli Lilly and Company",
+    "directory_scope": "peptide_landscape",
+    "evidence_ids": "lilly-20210701-ada-peptide"
+  },
+  {
+    "entity_id": "gan-and-lee",
+    "name": "Gan & Lee Pharmaceuticals",
+    "directory_scope": "ai_peptide",
+    "evidence_ids": "xtalpi-ganlee-peptide-ai"
+  },
+  {
+    "entity_id": "gilead-sciences",
+    "name": "Gilead Sciences",
+    "directory_scope": "peptide_landscape",
+    "evidence_ids": "gilead-20261022-pepstar-agreement"
+  },
+  {
+    "entity_id": "hansoh-pharma",
+    "name": "Hansoh Pharmaceutical Group",
+    "directory_scope": "ai_peptide",
+    "evidence_ids": "hkex-20261113-hansoh-ailsynbio"
+  },
+  {
+    "entity_id": "novartis",
+    "name": "Novartis",
+    "directory_scope": "ai_peptide",
+    "evidence_ids": "unp-20260218-novartis-peptide"
+  },
+  {
+    "entity_id": "novo-nordisk",
+    "name": "Novo Nordisk",
+    "directory_scope": "peptide_landscape",
+    "evidence_ids": "novo-annual-2025-peptides"
+  },
+  {
+    "entity_id": "peptway",
+    "name": "Peptway",
+    "directory_scope": "ai_peptide",
+    "evidence_ids": "peptway-about"
+  },
+  {
+    "entity_id": "syneron-bio",
+    "name": "Syneron Bio",
+    "directory_scope": "ai_peptide",
+    "evidence_ids": "cls-20260518-syneron-ai"
+  }
+]

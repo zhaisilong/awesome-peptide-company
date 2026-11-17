@@ -22,6 +22,17 @@
     "last_verified": "2026-11-17"
   },
   {
+    "entity_id": "astrazeneca",
+    "name": "AstraZeneca",
+    "one_liner": "AstraZeneca describes peptide research supported by AI, including its PepINVENT system.",
+    "entity_type": "pharma_company",
+    "current_status": "unknown",
+    "loop_level": "Not assessed",
+    "peptide_relevance": "adjacent",
+    "country": "",
+    "last_verified": "2026-11-17"
+  },
+  {
     "entity_id": "astrazeneca-molecular-ai",
     "name": "AstraZeneca Molecular AI",
     "one_liner": "Molecular AI department of AstraZeneca R&D with open-source generative design tools including PepINVENT.",
@@ -33,6 +44,17 @@
     "last_verified": "2026-11-17"
   },
   {
+    "entity_id": "bristol-myers-squibb",
+    "name": "Bristol Myers Squibb",
+    "one_liner": "Bristol Myers Squibb collaborated with Menten AI on peptide research.",
+    "entity_type": "pharma_company",
+    "current_status": "unknown",
+    "loop_level": "Not assessed",
+    "peptide_relevance": "adjacent",
+    "country": "",
+    "last_verified": "2026-11-17"
+  },
+  {
     "entity_id": "bytedance-ai4s-team",
     "name": "ByteDance AI4S team",
     "one_liner": "AI for Science team at ByteDance that developed the Protenix structure prediction model.",
@@ -40,6 +62,72 @@
     "current_status": "active",
     "loop_level": "Not assessed",
     "peptide_relevance": "infrastructure",
+    "country": "",
+    "last_verified": "2026-11-17"
+  },
+  {
+    "entity_id": "eli-lilly",
+    "name": "Eli Lilly and Company",
+    "one_liner": "Eli Lilly develops peptide medicines, including tirzepatide.",
+    "entity_type": "pharma_company",
+    "current_status": "unknown",
+    "loop_level": "Not assessed",
+    "peptide_relevance": "adjacent",
+    "country": "",
+    "last_verified": "2026-11-17"
+  },
+  {
+    "entity_id": "gan-and-lee",
+    "name": "Gan & Lee Pharmaceuticals",
+    "one_liner": "Gan & Lee announced a peptide research collaboration using XtalPi’s AI platform.",
+    "entity_type": "pharma_company",
+    "current_status": "unknown",
+    "loop_level": "Not assessed",
+    "peptide_relevance": "adjacent",
+    "country": "",
+    "last_verified": "2026-11-17"
+  },
+  {
+    "entity_id": "gilead-sciences",
+    "name": "Gilead Sciences",
+    "one_liner": "Gilead announced an agreement to acquire an investigational peptide program, subject to closing.",
+    "entity_type": "pharma_company",
+    "current_status": "unknown",
+    "loop_level": "Not assessed",
+    "peptide_relevance": "adjacent",
+    "country": "",
+    "last_verified": "2026-11-17"
+  },
+  {
+    "entity_id": "hansoh-pharma",
+    "name": "Hansoh Pharmaceutical Group",
+    "one_liner": "A Hansoh subsidiary licensed AilsynBio’s AI platform for peptide discovery.",
+    "entity_type": "pharma_company",
+    "current_status": "unknown",
+    "loop_level": "Not assessed",
+    "peptide_relevance": "adjacent",
+    "country": "",
+    "last_verified": "2026-11-17"
+  },
+  {
+    "entity_id": "novartis",
+    "name": "Novartis",
+    "one_liner": "Novartis and Unnatural Products announced an AI-enabled peptide research collaboration.",
+    "entity_type": "pharma_company",
+    "current_status": "unknown",
+    "loop_level": "Not assessed",
+    "peptide_relevance": "adjacent",
+    "country": "",
+    "last_verified": "2026-11-17"
+  },
+  {
+    "entity_id": "novo-nordisk",
+    "name": "Novo Nordisk",
+    "one_liner": "Novo Nordisk reports peptide-focused research and medicines.",
+    "entity_type": "pharma_company",
+    "current_status": "unknown",
+    "loop_level": "Not assessed",
+    "peptide_relevance": "adjacent",
     "country": "",
     "last_verified": "2026-11-17"
   },

@@ -1,0 +1,15 @@
+entity_id,name,directory_scope,evidence_ids
+ailsynbio,AilsynBio,ai_peptide,hkex-20261113-hansoh-ailsynbio
+anew-labs,Anew Labs,ai_peptide,anew-labs-dpsa
+astrazeneca,AstraZeneca,ai_peptide,astrazeneca-20260227-peptide-ai
+astrazeneca-molecular-ai,AstraZeneca Molecular AI,ai_peptide,github-molecularai-pepinvent
+bristol-myers-squibb,Bristol Myers Squibb,ai_peptide,menten-20240528-bms-peptide
+bytedance-ai4s-team,ByteDance AI4S team,unassessed,
+eli-lilly,Eli Lilly and Company,peptide_landscape,lilly-20210701-ada-peptide
+gan-and-lee,Gan & Lee Pharmaceuticals,ai_peptide,xtalpi-ganlee-peptide-ai
+gilead-sciences,Gilead Sciences,peptide_landscape,gilead-20261022-pepstar-agreement
+hansoh-pharma,Hansoh Pharmaceutical Group,ai_peptide,hkex-20261113-hansoh-ailsynbio
+novartis,Novartis,ai_peptide,unp-20260218-novartis-peptide
+novo-nordisk,Novo Nordisk,peptide_landscape,novo-annual-2025-peptides
+peptway,Peptway,ai_peptide,peptway-about
+syneron-bio,Syneron Bio,ai_peptide,cls-20260518-syneron-ai

@@ -1,6 +1,6 @@
 # Peptway
 
-[← Home](../../README.md) · [Browse by type](../../index/by-type.md) · [By status](../../index/by-status.md) · [By modality](../../index/by-modality.md)
+[← Home](../../README.md) · [By scope](../../index/by-scope.md) · [Browse by type](../../index/by-type.md) · [By status](../../index/by-status.md) · [By modality](../../index/by-modality.md)
 
 Hangzhou biotechnology company reporting AI-enabled peptide research.
 
@@ -19,6 +19,8 @@ Hangzhou biotechnology company reporting AI-enabled peptide research.
 
 
 ## Peptide relevance and tags
+
+**Directory scope:** AI–peptide work [peptway-about](https://www.peptway.com/about.html)
 
 **Relevance:** Core. [peptway-about](https://www.peptway.com/about.html)
 

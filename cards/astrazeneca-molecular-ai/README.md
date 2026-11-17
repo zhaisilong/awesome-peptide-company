@@ -1,6 +1,6 @@
 # AstraZeneca Molecular AI
 
-[← Home](../../README.md) · [Browse by type](../../index/by-type.md) · [By status](../../index/by-status.md) · [By modality](../../index/by-modality.md)
+[← Home](../../README.md) · [By scope](../../index/by-scope.md) · [Browse by type](../../index/by-type.md) · [By status](../../index/by-status.md) · [By modality](../../index/by-modality.md)
 
 Molecular AI department of AstraZeneca R&D with open-source generative design tools including PepINVENT.
 
@@ -19,6 +19,8 @@ Molecular AI department of AstraZeneca R&D with open-source generative design to
 
 
 ## Peptide relevance and tags
+
+**Directory scope:** AI–peptide work [github-molecularai-pepinvent](https://github.com/MolecularAI/PepINVENT)
 
 **Relevance:** Adjacent. [github-molecularai-pepinvent](https://github.com/MolecularAI/PepINVENT) [pubmed-20250416-pepinvent](https://pubmed.ncbi.nlm.nih.gov/40248248/)
 

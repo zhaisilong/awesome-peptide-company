@@ -1,0 +1,20 @@
+# Pharmaceutical company survey
+
+Review date: 2026-11-17. This survey summarizes public organization and partnership disclosures; it is not a ranking. A directory category records the evidence found in this review, not all activities of a company. Company or partner announcements establish what was disclosed, not independent verification of the underlying technology.
+
+| Organization | Directory scope | Public evidence and qualification |
+| --- | --- | --- |
+| AstraZeneca | AI–peptide work | [AstraZeneca](https://www.astrazeneca.com/what-science-can-do/topics/next-generation-therapeutics/turning-natures-messengers-medicines-innovation-peptide-discovery-development.html) describes its use of AI in peptide research. Its Molecular AI team is a separately catalogued organization; a group-level collaboration does not establish the team's involvement. |
+| Bristol Myers Squibb | AI–peptide work | [Menten AI](https://www.streetinsider.com/Business%2BWire/Menten%2BAI%2BAnnounces%2BCompletion%2Bof%2BResearch%2BCollaboration%2Bwith%2BBristol%2BMyers%2BSquibb/23281395.html?classic=1) announced completion of a peptide research collaboration using Menten's platform. The disclosure does not establish that the platform belonged to Bristol Myers Squibb. |
+| Gan & Lee Pharmaceuticals | AI–peptide work | [XtalPi](https://en.xtalpi.com/xtalpi-and-gan-lee-pharmaceuticals-partner-to-advance-ai-driven-peptide-drug-discovery-for-metabolic-diseases/) announced a peptide research and platform-licensing collaboration with Gan & Lee. The platform is attributed to XtalPi; the announcement is not evidence that a specific resulting medicine has been developed. |
+| Hansoh Pharmaceutical Group | AI–peptide work | [Hansoh's exchange announcement](https://www1.hkexnews.hk/listedco/listconews/sehk/2026/1113/2026111300947.pdf) identifies Hansoh (Shanghai) Healthtech, a wholly owned subsidiary, as the contracting party in an agreement with AilsynBio. The AI platform is attributed to AilsynBio. |
+| Novartis | AI–peptide work | [Unnatural Products](https://www.globenewswire.com/news-release/2026/02/18/3240126/0/en/unnatural-products-announces-licensing-agreement-with-novartis-to-develop-macrocyclic-peptide-therapeutics.html) announced a peptide research and licensing collaboration with Novartis using its own AI-enhanced platform. The announcement does not establish a Novartis-owned platform for that collaboration. |
+| Eli Lilly | Peptide landscape · AI link unverified | [Lilly's investor material](https://investor.lilly.com/static-files/250f223d-a0f9-431a-8c01-e78676daecf2) identifies a peptide medicine in its research portfolio. It does not establish an AI connection for that project. |
+| Gilead Sciences | Peptide landscape · AI link unverified | [Gilead](https://investors.gilead.com/news/news-details/2026/Gilead-to-Acquire-Investigational-Oral-IL-23R-Inhibitor-HCXT-2001-Strengthening-Its-Inflammation-Pipeline-in-IBD/default.aspx) announced an agreement to acquire a specific investigational peptide program from PepStar. Closing was conditional; the disclosure does not establish completed acquisition of PepStar or an AI connection to this program. |
+| Novo Nordisk | Peptide landscape · AI link unverified | [Novo Nordisk's 2025 annual report](https://annualreport.novonordisk.com/2025/strategic-aspirations/innovation-and-therapeutic-focus.html) describes peptide research and medicines. This source does not establish a specific AI–peptide connection. |
+
+## Follow-up
+
+- Recheck whether the Gilead–PepStar program transaction has closed before describing a transfer as completed.
+- Review additional primary sources for a specific Novo Nordisk or Lilly AI–peptide activity. A general AI platform, separately documented peptide business, or a collaboration involving a broader molecule class is not enough by itself to establish that connection.
+- Continue to distinguish an announced collaboration from subsequent execution, and attribute platform ownership and contracting parties to the entities named in the source.

@@ -1,0 +1,1 @@
+The [PubMed record for the PepINVENT article](https://pubmed.ncbi.nlm.nih.gov/40248248/) lists Molecular AI at AstraZeneca among its affiliations. Parent-company relationships do not establish this team's participation.

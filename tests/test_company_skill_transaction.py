@@ -1,6 +1,8 @@
 import csv
 import importlib.util
 import shutil
+import subprocess
+from datetime import date
 from pathlib import Path
 
 import pytest
@@ -58,6 +60,48 @@ def edit_source(workspace, evidence_id, **changes):
         writer = csv.DictWriter(stream, fieldnames=headers, lineterminator='\n')
         writer.writeheader()
         writer.writerows(rows)
+
+
+def test_complete_curation_workflow_records_snapshot_before_validation(tmp_path):
+    """A real candidate preview and apply can be validated and rebuilt with history enabled."""
+    from awepep_co.cli import main
+
+    root = tmp_path / 'project'
+    root.mkdir()
+    for directory in ('data', 'vocab', 'schema', 'notes', 'docs', 'templates', 'assets', 'awepep_co'):
+        shutil.copytree(ROOT / directory, root / directory, ignore=shutil.ignore_patterns('__pycache__', '*.pyc'))
+    shutil.copy(ROOT / 'README.md', root / 'README.md')
+    today = date.today().isoformat()
+    (root / '.build-date').write_text(today + '\n', encoding='utf-8')
+    assert main(['history', 'record', '--root', str(root), '--reason', 'baseline']) == 0
+    assert main(['build', '--root', str(root), '--as-of', today]) == 0
+    subprocess.run(['git', 'init', '-q'], cwd=root, check=True)
+    subprocess.run(['git', 'add', '.'], cwd=root, check=True)
+    subprocess.run(['git', '-c', 'user.name=Test', '-c', 'user.email=test@example.org',
+                    'commit', '-qm', 'baseline'], cwd=root, check=True)
+
+    workspace = tmp_path / 'candidate'
+    tx.prepare(root, workspace)
+    edit_entity(workspace)
+    for directory in ('docs', 'templates', 'assets', 'cards', 'index', 'history'):
+        shutil.copytree(root / directory, workspace / directory)
+    shutil.copy(root / 'README.md', workspace / 'README.md')
+    shutil.copytree(root / 'awepep_co', workspace / 'awepep_co', dirs_exist_ok=True)
+    assert main(['history', 'record', '--root', str(workspace), '--reason', 'preview']) == 0
+    assert main(['history', 'check', '--root', str(workspace), '--require']) == 0
+    assert main(['build', '--root', str(workspace), '--as-of', today]) == 0
+    assert main(['build', '--root', str(workspace), '--as-of', today, '--check']) == 0
+
+    tx.apply(root, workspace, ['data/entities.csv'])
+    tx.guard(root, workspace)
+    # The previously documented ordering failed here: changed inputs have no real snapshot yet.
+    assert main(['validate', '--root', str(root), '--base-ref', 'HEAD']) == 1
+    assert main(['history', 'record', '--root', str(root), '--reason', 'curation']) == 0
+    assert main(['history', 'check', '--root', str(root), '--require', '--base-ref', 'HEAD']) == 0
+    assert main(['validate', '--root', str(root), '--base-ref', 'HEAD']) == 0
+    assert main(['build', '--root', str(root), '--as-of', today]) == 0
+    assert main(['build', '--root', str(root), '--as-of', today, '--check']) == 0
+    assert (root / 'cards/anew-labs/README.md').read_bytes() == (workspace / 'cards/anew-labs/README.md').read_bytes()
 
 
 @pytest.mark.parametrize('field,value', [
