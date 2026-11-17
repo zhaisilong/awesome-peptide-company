@@ -1,0 +1,7 @@
+entity_id,alias,lang,kind,valid_from,valid_to,evidence_ids
+anew-labs,Anew Therapeutics,en,variant,,,scmp-undated-bytedance-drug-unit
+anew-labs,ByteDance AI Drug Discovery,en,variant,,,scmp-undated-bytedance-drug-unit
+anew-labs,新生实验室,zh,zh_name,,,wowtale-ko-20260917-anew-labs-round
+astrazeneca-molecular-ai,MolecularAI,en,variant,,,github-molecularai-org
+bytedance-ai4s-team,ByteDance AML AI4Science Team,en,variant,,,github-bytedance-protenix
+syneron-bio,元思生肽,zh,zh_name,,,sina-20251211-syneron-series-a

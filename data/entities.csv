@@ -1,0 +1,7 @@
+entity_id,name,entity_type,inclusion,parent_id,peptide_relevance,relevance_evidence_ids,country,hq_city,website,one_liner
+anew-labs,Anew Labs,ai_native_biotech,full,,infrastructure,anew-labs-dpsa,CN,Shanghai,https://anewbt.com/,AI drug discovery company with peptide-related research and experimental programmes.
+astrazeneca,AstraZeneca,parent_org,stub,,,,,,,
+astrazeneca-molecular-ai,AstraZeneca Molecular AI,pharma_ai_team,full,astrazeneca,adjacent,github-molecularai-pepinvent,SE,Gothenburg,https://github.com/MolecularAI,Molecular AI department of AstraZeneca R&D with open-source generative design tools including PepINVENT.
+bytedance,ByteDance,parent_org,stub,,,,,,,
+bytedance-ai4s-team,ByteDance AI4S team,bigtech_ai_team,full,bytedance,infrastructure,biorxiv-20250313-protein-peptide-benchmark,,,https://github.com/bytedance/Protenix,AI for Science team at ByteDance that developed the Protenix structure prediction model.
+syneron-bio,Syneron Bio,ai_native_biotech,full,,core,,CN,,,Macrocyclic peptide company with the Synova platform and an AstraZeneca collaboration.

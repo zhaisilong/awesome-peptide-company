@@ -1,0 +1,46 @@
+[
+  {
+    "entity_id": "anew-labs",
+    "name": "Anew Labs",
+    "one_liner": "AI drug discovery company with peptide-related research and experimental programmes.",
+    "entity_type": "ai_native_biotech",
+    "current_status": "active",
+    "loop_level": "Not assessed",
+    "peptide_relevance": "infrastructure",
+    "country": "CN",
+    "last_verified": "2026-11-17"
+  },
+  {
+    "entity_id": "astrazeneca-molecular-ai",
+    "name": "AstraZeneca Molecular AI",
+    "one_liner": "Molecular AI department of AstraZeneca R&D with open-source generative design tools including PepINVENT.",
+    "entity_type": "pharma_ai_team",
+    "current_status": "active",
+    "loop_level": "Not assessed",
+    "peptide_relevance": "adjacent",
+    "country": "SE",
+    "last_verified": "2026-11-17"
+  },
+  {
+    "entity_id": "bytedance-ai4s-team",
+    "name": "ByteDance AI4S team",
+    "one_liner": "AI for Science team at ByteDance that developed the Protenix structure prediction model.",
+    "entity_type": "bigtech_ai_team",
+    "current_status": "active",
+    "loop_level": "Not assessed",
+    "peptide_relevance": "infrastructure",
+    "country": "",
+    "last_verified": "2026-11-17"
+  },
+  {
+    "entity_id": "syneron-bio",
+    "name": "Syneron Bio",
+    "one_liner": "Macrocyclic peptide company with the Synova platform and an AstraZeneca collaboration.",
+    "entity_type": "ai_native_biotech",
+    "current_status": "active",
+    "loop_level": "Not assessed",
+    "peptide_relevance": "core",
+    "country": "CN",
+    "last_verified": "2026-11-17"
+  }
+]

@@ -1,0 +1,6 @@
+asset_id,name,asset_type,url,license,first_public_date,description
+anewdde,AnewDDE,platform,https://anewbt.com/,,2026-09-19,Agentic drug discovery engine described by Anew Labs.
+pepinvent,PepINVENT,software,https://github.com/MolecularAI/PepINVENT,Apache-2.0,2024-09,Generative peptide design framework with natural and non-natural amino acids built on the REINVENT ecosystem.
+protenix,Protenix,model,https://github.com/bytedance/Protenix,Apache-2.0,2025-01,Open-source AlphaFold 3-style biomolecular structure prediction model with code and weights.
+reinvent4,REINVENT 4,software,https://github.com/MolecularAI/REINVENT4,Apache-2.0,,Open-source generative AI framework for small-molecule design.
+synova,Synova,platform,,,2025-03,Syneron Bio's proprietary macrocyclic peptide discovery platform.

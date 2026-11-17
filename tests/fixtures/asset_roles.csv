@@ -1,0 +1,8 @@
+asset_id,entity_id,role,start,end,confidence,evidence_ids
+pepinvent,astrazeneca-molecular-ai,developer,2024-09,,confirmed,arxiv-202409-pepinvent;rsc-20250416-pepinvent
+protenix,anew-labs,maintainer,2026-06,,reported,36kr-20260610-bytedance-spinoff;36kr-20260917-anew-labs-round
+protenix,bytedance-ai4s-team,developer,2025-01,,confirmed,biorxiv-20250108-protenix;github-bytedance-protenix
+protenix,bytedance-ai4s-team,maintainer,2025-01,,confirmed,github-bytedance-protenix
+reinvent4,astrazeneca-molecular-ai,developer,2024,,confirmed,github-molecularai-org;jcheminf-2024-reinvent4
+synova,astrazeneca,licensee,2025-03,,confirmed,prnewswire-20250321-syneron-astrazeneca
+synova,syneron-bio,owner,2025-03,,confirmed,prnewswire-20250321-syneron-astrazeneca
