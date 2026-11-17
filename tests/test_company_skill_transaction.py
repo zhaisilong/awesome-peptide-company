@@ -1,0 +1,235 @@
+import csv
+import importlib.util
+import shutil
+from pathlib import Path
+
+import pytest
+
+ROOT = Path(__file__).resolve().parents[1]
+SCRIPT = ROOT / '.codex/skills/curate-peptide-companies/scripts/transaction.py'
+spec = importlib.util.spec_from_file_location('company_transaction', SCRIPT)
+tx = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(tx)
+
+
+@pytest.fixture
+def project(tmp_path):
+    project = tmp_path / 'project'
+    project.mkdir()
+    for name in ('data', 'vocab', 'schema'):
+        shutil.copytree(ROOT / name, project / name)
+    (project / 'awepep_co').mkdir()
+    shutil.copy(ROOT / 'awepep_co/tables.json', project / 'awepep_co/tables.json')
+    shutil.copy(ROOT / '.build-date', project / '.build-date')
+    (project / 'notes').mkdir()
+    (project / 'notes/syneron-bio.md').write_text('Existing user note.\n', encoding='utf-8')
+    return project
+
+
+def edit_entity(workspace):
+    path = workspace / 'data/entities.csv'
+    text = path.read_text(encoding='utf-8')
+    text = text.replace('AI drug discovery company with peptide-related research and experimental programmes.', 'Research company with peptide-related work.')
+    path.write_text(text, encoding='utf-8')
+
+
+def add_evidence(workspace):
+    path = workspace / 'data/evidence.csv'
+    with path.open(encoding='utf-8', newline='') as stream:
+        reader = csv.DictReader(stream)
+        headers, rows = reader.fieldnames, list(reader)
+    row = dict(rows[0])
+    row.update(evidence_id='zz-sample-source', origin_key='zz-sample-source', url='https://example.org/source')
+    rows.append(row)
+    with path.open('w', encoding='utf-8', newline='') as stream:
+        writer = csv.DictWriter(stream, fieldnames=headers, lineterminator='\n')
+        writer.writeheader()
+        writer.writerows(rows)
+
+
+def test_valid_multi_table_and_new_note_preserves_dirty_inputs(project, tmp_path):
+    workspace = tmp_path / 'candidate'
+    user_note = (project / 'notes/syneron-bio.md').read_bytes()
+    tx.prepare(project, workspace)
+    edit_entity(workspace)
+    add_evidence(workspace)
+    (workspace / 'notes/anew-labs.md').write_text('Verified sources: https://example.org/source\n', encoding='utf-8')
+    tx.apply(project, workspace, ['data/entities.csv', 'data/evidence.csv', 'notes/anew-labs.md'])
+    assert 'Research company' in (project / 'data/entities.csv').read_text()
+    assert 'zz-sample-source' in (project / 'data/evidence.csv').read_text()
+    assert 'Verified sources' in (project / 'notes/anew-labs.md').read_text()
+    assert (project / 'notes/syneron-bio.md').read_bytes() == user_note
+
+
+@pytest.mark.parametrize('operation', ['event_change', 'event_remove', 'entity_remove', 'invalid_reference', 'unlisted'])
+def test_invalid_candidate_leaves_project_unchanged(project, tmp_path, operation):
+    workspace = tmp_path / 'candidate'
+    tx.prepare(project, workspace)
+    before = tx._files(project)
+    name = 'data/events.csv'
+    path = workspace / name
+    text = path.read_text(encoding='utf-8')
+    if operation == 'event_change':
+        path.write_text(text.replace('Reuters reported approximately USD 290M', 'Some other claim'), encoding='utf-8')
+    elif operation == 'event_remove':
+        path.write_text('\n'.join(text.splitlines()[:1]) + '\n', encoding='utf-8')
+    elif operation == 'entity_remove':
+        name = 'data/entities.csv'
+        path = workspace / name
+        path.write_text('\n'.join(line for line in path.read_text().splitlines() if not line.startswith('anew-labs,')) + '\n')
+    elif operation == 'invalid_reference':
+        path.write_text(text + 'new-event,absent,2026,year,founded,,,,,Founded,confirmed,missing,\n', encoding='utf-8')
+    else:
+        edit_entity(workspace)
+    with pytest.raises(ValueError):
+        tx.apply(project, workspace, [name])
+    assert tx._files(project) == before
+
+
+def test_concurrent_user_edit_aborts_without_overwrite(project, tmp_path):
+    workspace = tmp_path / 'candidate'
+    tx.prepare(project, workspace)
+    edit_entity(workspace)
+    path = project / 'notes/syneron-bio.md'
+    path.write_text('User changed the note.\n')
+    before = tx._files(project)
+    with pytest.raises(ValueError, match='changed since prepare'):
+        tx.apply(project, workspace, ['data/entities.csv'])
+    assert tx._files(project) == before
+
+
+def test_write_failure_rolls_back_first_file(project, tmp_path, monkeypatch):
+    workspace = tmp_path / 'candidate'
+    tx.prepare(project, workspace)
+    edit_entity(workspace)
+    add_evidence(workspace)
+    before = tx._files(project)
+    original = tx._atomic_write
+    calls = []
+    def fail_second(path, content, mode):
+        calls.append(path)
+        if len(calls) == 2:
+            raise OSError('simulated disk failure')
+        original(path, content, mode)
+    monkeypatch.setattr(tx, '_atomic_write', fail_second)
+    with pytest.raises(OSError, match='simulated'):
+        tx.apply(project, workspace, ['data/entities.csv', 'data/evidence.csv'])
+    assert tx._files(project) == before
+
+
+def test_concurrent_edit_during_apply_is_not_overwritten(project, tmp_path, monkeypatch):
+    workspace = tmp_path / 'candidate'
+    tx.prepare(project, workspace)
+    edit_entity(workspace)
+    add_evidence(workspace)
+    before_entities = (project / 'data/entities.csv').read_bytes()
+    original = tx._atomic_write
+    def external_edit(path, content, mode):
+        original(path, content, mode)
+        if path.name == 'entities.csv' and content != before_entities:
+            (project / 'notes/syneron-bio.md').write_text('Concurrent user change.\n')
+    monkeypatch.setattr(tx, '_atomic_write', external_edit)
+    with pytest.raises(ValueError, match='changed during apply'):
+        tx.apply(project, workspace, ['data/entities.csv', 'data/evidence.csv'])
+    assert (project / 'data/entities.csv').read_bytes() == before_entities
+    assert (project / 'notes/syneron-bio.md').read_text() == 'Concurrent user change.\n'
+
+
+def test_unknown_note_and_unsafe_paths_rejected(project, tmp_path):
+    workspace = tmp_path / 'candidate'
+    tx.prepare(project, workspace)
+    (workspace / 'notes/missing.md').write_text('No entity.\n')
+    with pytest.raises(ValueError, match='existing entity'):
+        tx.apply(project, workspace, ['notes/missing.md'])
+    with pytest.raises(ValueError, match='only source'):
+        tx.apply(project, workspace, ['notes/../README.md'])
+
+
+def test_date_cannot_go_back_or_into_future(project, tmp_path):
+    from datetime import date, timedelta
+    workspace = tmp_path / 'candidate'
+    tx.prepare(project, workspace)
+    previous = date.fromisoformat((project / '.build-date').read_text().strip())
+    for value, message in ((previous - timedelta(days=1), 'backwards'), (date.today() + timedelta(days=1), 'future')):
+        (workspace / '.build-date').write_text(value.isoformat() + '\n')
+        with pytest.raises(ValueError, match=message):
+            tx.apply(project, workspace, ['.build-date'])
+
+
+@pytest.mark.parametrize('change', ['bom', 'crlf', 'unsorted'])
+def test_changed_csv_must_be_utf8_lf_and_sorted(project, tmp_path, change):
+    workspace = tmp_path / 'candidate'
+    tx.prepare(project, workspace)
+    before = tx._files(project)
+    path = workspace / 'data/entities.csv'
+    content = path.read_bytes()
+    if change == 'bom':
+        content = b'\xef\xbb\xbf' + content
+    elif change == 'crlf':
+        content = content.replace(b'\n', b'\r\n')
+    else:
+        lines = content.splitlines()
+        content = b'\n'.join([lines[0]] + list(reversed(lines[1:]))) + b'\n'
+    path.write_bytes(content)
+    with pytest.raises(ValueError):
+        tx.apply(project, workspace, ['data/entities.csv'])
+    assert tx._files(project) == before
+
+
+@pytest.mark.parametrize('target', ['README.md', 'templates/card.liquid', 'cards/new/README.md', 'index/new.md', 'awepep_co/render.py'])
+def test_render_input_change_before_apply_is_rejected(project, tmp_path, target):
+    workspace = tmp_path / 'candidate'
+    tx.prepare(project, workspace)
+    edit_entity(workspace)
+    path = project / target
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text('New user content.\n')
+    with pytest.raises(ValueError, match='render inputs or outputs changed'):
+        tx.apply(project, workspace, ['data/entities.csv'])
+    assert path.read_text() == 'New user content.\n'
+
+
+def test_guard_protects_generated_output_after_apply(project, tmp_path):
+    workspace = tmp_path / 'candidate'
+    (project / 'README.md').write_text('Original\n')
+    tx.prepare(project, workspace)
+    edit_entity(workspace)
+    tx.apply(project, workspace, ['data/entities.csv'])
+    tx.guard(project, workspace)
+    (project / 'README.md').write_text('User changed this.\n')
+    with pytest.raises(ValueError, match='render inputs or output files changed'):
+        tx.guard(project, workspace)
+    assert (project / 'README.md').read_text() == 'User changed this.\n'
+
+
+def test_guard_protects_source_after_apply(project, tmp_path):
+    workspace = tmp_path / 'candidate'
+    tx.prepare(project, workspace)
+    edit_entity(workspace)
+    tx.apply(project, workspace, ['data/entities.csv'])
+    (project / 'notes/syneron-bio.md').write_text('User change after apply.\n')
+    with pytest.raises(ValueError, match='inputs changed since apply'):
+        tx.guard(project, workspace)
+
+
+def test_new_evidence_backed_organization_and_event(project, tmp_path):
+    workspace = tmp_path / 'candidate'
+    tx.prepare(project, workspace)
+    add_evidence(workspace)
+    entities = workspace / 'data/entities.csv'
+    with entities.open('a', encoding='utf-8', newline='') as stream:
+        csv.writer(stream, lineterminator='\n').writerow([
+            'zz-test-labs', 'Z Test Labs', 'ai_native_biotech', 'full', '',
+            'core', 'zz-sample-source', '', '', '', 'Test organization.',
+        ])
+    events = workspace / 'data/events.csv'
+    with events.open('a', encoding='utf-8', newline='') as stream:
+        csv.writer(stream, lineterminator='\n').writerow([
+            'zz-test-labs~2026~first_public', 'zz-test-labs', '2026', 'year',
+            'first_public', '', '', '', '', 'First public activity.',
+            'reported', 'zz-sample-source', '',
+        ])
+    tx.apply(project, workspace, ['data/entities.csv', 'data/events.csv', 'data/evidence.csv'])
+    tx.guard(project, workspace)
+    assert 'zz-test-labs,' in (project / 'data/entities.csv').read_text(encoding='utf-8')
+    assert 'zz-test-labs~2026~first_public,' in (project / 'data/events.csv').read_text(encoding='utf-8')

@@ -16,7 +16,7 @@ No current maintainer recorded.
 
 ## [Protenix](https://github.com/bytedance/Protenix)
 
-Open-source AlphaFold 3-style biomolecular structure prediction model with code and weights.
+Biomolecular structure prediction project associated with ByteDance AI4S team.
 
 - [ByteDance AI4S team](../cards/bytedance-ai4s-team/README.md): confirmed
 

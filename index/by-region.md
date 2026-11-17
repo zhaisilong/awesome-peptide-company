@@ -9,7 +9,12 @@
 ## CN
 
 - [Anew Labs](../cards/anew-labs/README.md)
+- [Peptway](../cards/peptway/README.md)
 - [Syneron Bio](../cards/syneron-bio/README.md)
+
+## HK
+
+- [AilsynBio](../cards/ailsynbio/README.md)
 
 ## SE
 

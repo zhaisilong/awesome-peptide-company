@@ -20,7 +20,7 @@ Molecular AI department of AstraZeneca R&D with open-source generative design to
 
 ## Peptide relevance and tags
 
-**Relevance:** Adjacent. [github-molecularai-pepinvent](https://github.com/MolecularAI/PepINVENT)
+**Relevance:** Adjacent. [github-molecularai-pepinvent](https://github.com/MolecularAI/PepINVENT) [pubmed-20250416-pepinvent](https://pubmed.ncbi.nlm.nih.gov/40248248/)
 
 - **Computational methods:** Generative design
 - **Computational methods:** Property prediction
@@ -62,3 +62,10 @@ These are parent-level relationships and do not imply participation by this team
 - **A** [AstraZeneca - Molecular AI (GitHub organization)](https://github.com/MolecularAI) · GitHub · accessed 2026-11-17
 - **A** [MolecularAI/PepINVENT (repository README)](https://github.com/MolecularAI/PepINVENT) · GitHub · accessed 2026-11-17
 - **A** [MolecularAI/REINVENT4](https://github.com/MolecularAI/REINVENT4) · GitHub · accessed 2026-11-17
+- **A** [PepINVENT: generative peptide design beyond natural amino acids](https://pubmed.ncbi.nlm.nih.gov/40248248/) · Chemical Science via PubMed · accessed 2026-11-17
+
+## Curator notes
+
+*Editorial opinion.*
+
+The [PubMed record for the PepINVENT article](https://pubmed.ncbi.nlm.nih.gov/40248248/) lists Molecular AI at AstraZeneca among its affiliations. Parent-company relationships do not establish this team's participation.

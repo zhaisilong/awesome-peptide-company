@@ -1,5 +1,6 @@
 # Agent instructions
 
+- Use the repo-local `$curate-peptide-companies` skill when adding or updating a specified company or organizational team.
 - Read sections 3 and 4 of `plan/awesome-ai4peptide-companies — Implementation Plan.md` and the policies in `docs/` before changing records.
 - The CSV files in `data/` are the source of truth. Edit data, vocabularies, notes, templates, translations, and code as appropriate; never manually edit generated `cards/`, `index/`, or `build/`.
 - Link factual claims to evidence. Leave unsupported fields empty, and do not promote uncertain events to confirmed. Keep conflicting source claims visible in notes.

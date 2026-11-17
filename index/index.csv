@@ -1,5 +1,7 @@
 entity_id,name,one_liner,entity_type,current_status,loop_level,peptide_relevance,country,last_verified
+ailsynbio,AilsynBio,Hong Kong AI-native biotechnology company focused on peptide therapeutics.,ai_native_biotech,active,Not assessed,core,HK,2026-11-17
 anew-labs,Anew Labs,AI drug discovery company with peptide-related research and experimental programmes.,ai_native_biotech,active,Not assessed,infrastructure,CN,2026-11-17
 astrazeneca-molecular-ai,AstraZeneca Molecular AI,Molecular AI department of AstraZeneca R&D with open-source generative design tools including PepINVENT.,pharma_ai_team,active,Not assessed,adjacent,SE,2026-11-17
 bytedance-ai4s-team,ByteDance AI4S team,AI for Science team at ByteDance that developed the Protenix structure prediction model.,bigtech_ai_team,active,Not assessed,infrastructure,,2026-11-17
+peptway,Peptway,Hangzhou biotechnology company reporting AI-enabled peptide research.,ai_native_biotech,active,Not assessed,core,CN,2026-11-17
 syneron-bio,Syneron Bio,Macrocyclic peptide company with the Synova platform and an AstraZeneca collaboration.,ai_native_biotech,active,Not assessed,core,CN,2026-11-17

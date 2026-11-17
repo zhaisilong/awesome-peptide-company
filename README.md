@@ -27,6 +27,10 @@ Each entry links to a profile with its evidence, assets, and timeline. Status an
 
 <!-- BEGIN:INDEX -->
 
+- **[AilsynBio](cards/ailsynbio/README.md)**<br>
+  Hong Kong AI-native biotechnology company focused on peptide therapeutics.<br>
+  AI-native biotech · Active · Core relevance · HK
+
 - **[Anew Labs](cards/anew-labs/README.md)**<br>
   AI drug discovery company with peptide-related research and experimental programmes.<br>
   AI-native biotech · Active · Infrastructure relevance · CN
@@ -38,6 +42,10 @@ Each entry links to a profile with its evidence, assets, and timeline. Status an
 - **[ByteDance AI4S team](cards/bytedance-ai4s-team/README.md)**<br>
   AI for Science team at ByteDance that developed the Protenix structure prediction model.<br>
   Technology company AI team · Active · Infrastructure relevance
+
+- **[Peptway](cards/peptway/README.md)**<br>
+  Hangzhou biotechnology company reporting AI-enabled peptide research.<br>
+  AI-native biotech · Active · Core relevance · CN
 
 - **[Syneron Bio](cards/syneron-bio/README.md)**<br>
   Macrocyclic peptide company with the Synova platform and an AstraZeneca collaboration.<br>

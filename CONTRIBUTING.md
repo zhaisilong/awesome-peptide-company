@@ -11,6 +11,8 @@ python -m pytest
 
 The CSV files in `data/` are the authoritative records. Add sources to `evidence.csv` and cite source IDs from relevant records. Consult the [inclusion](docs/inclusion-policy.md), [evidence](docs/evidence-policy.md), and [taxonomy](docs/taxonomy.md) policies before editing. Preserve IDs and existing entities and events; request maintainer review for exceptions. Findings with incomplete or conflicting evidence must be described conservatively. Preserve the original test fixtures: production source verification is tracked separately in [source review](docs/source-review.md).
 
+For Codex-assisted work on a specified organization, the repo-local [`$curate-peptide-companies` skill](.codex/skills/curate-peptide-companies/SKILL.md) guides source verification, safe multi-table changes, and review. It does not imply permission to commit or push.
+
 ## Adding records
 
 Edit the source CSVs, or use `awepep-co add` with repeated `--field name=value` arguments for an `entity`, `event`, `evidence`, or `asset`. Field names and required values are defined by `schema/tables.json` and the controlled vocabulary in `vocab/`. For example, use `awepep-co add evidence --field evidence_id=... --field url=...` with the remaining required fields. All values must describe verified sources or conservatively identified reports. The command validates the resulting dataset, checks keys and references, and writes a sorted CSV only if validation succeeds. It does not generate pages.

@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.0
+
+- Add a repository skill for evidence-backed organization curation and validated multi-table updates.
+- Add evidence-backed profiles for AilsynBio and Peptway; document an additional company pending verification.
+- Review the initial organizations and clarify the scope of Protenix license statements.
+
 ## 0.2.0
 
 - Improve organization browsing with a compact home directory, readable labels, and navigation across profiles and indexes.

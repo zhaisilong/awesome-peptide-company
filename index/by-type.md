@@ -4,7 +4,9 @@
 
 ## AI-native biotech
 
+- [AilsynBio](../cards/ailsynbio/README.md)
 - [Anew Labs](../cards/anew-labs/README.md)
+- [Peptway](../cards/peptway/README.md)
 - [Syneron Bio](../cards/syneron-bio/README.md)
 
 ## Technology company AI team

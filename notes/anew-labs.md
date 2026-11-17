@@ -1,0 +1,1 @@
+Anew Labs lists macrocyclic-peptide research on its [official research page](https://anewbt.com/research/dpsa/). This is an organization-reported research activity, not a confirmation of asset ownership or a reviewed loop assessment.

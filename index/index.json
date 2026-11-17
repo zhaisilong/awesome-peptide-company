@@ -1,5 +1,16 @@
 [
   {
+    "entity_id": "ailsynbio",
+    "name": "AilsynBio",
+    "one_liner": "Hong Kong AI-native biotechnology company focused on peptide therapeutics.",
+    "entity_type": "ai_native_biotech",
+    "current_status": "active",
+    "loop_level": "Not assessed",
+    "peptide_relevance": "core",
+    "country": "HK",
+    "last_verified": "2026-11-17"
+  },
+  {
     "entity_id": "anew-labs",
     "name": "Anew Labs",
     "one_liner": "AI drug discovery company with peptide-related research and experimental programmes.",
@@ -30,6 +41,17 @@
     "loop_level": "Not assessed",
     "peptide_relevance": "infrastructure",
     "country": "",
+    "last_verified": "2026-11-17"
+  },
+  {
+    "entity_id": "peptway",
+    "name": "Peptway",
+    "one_liner": "Hangzhou biotechnology company reporting AI-enabled peptide research.",
+    "entity_type": "ai_native_biotech",
+    "current_status": "active",
+    "loop_level": "Not assessed",
+    "peptide_relevance": "core",
+    "country": "CN",
     "last_verified": "2026-11-17"
   },
   {

@@ -23,6 +23,7 @@ AI drug discovery company with peptide-related research and experimental program
 **Relevance:** Infrastructure. [anew-labs-dpsa](https://anewbt.com/research/dpsa/)
 
 - **Computational methods:** Property prediction
+- **Modality:** Macrocyclic peptide
 
 ## Dry–wet loop
 
@@ -51,3 +52,9 @@ No papers linked.
 - **B** [ByteDance Spin-off AI Pharmaceutical Division Secures Massive 2 Billion Yuan First-Round Financing](https://eu.36kr.com/en/p/3986744042765062) · 36Kr (via VCBeat) · accessed 2026-11-17
 - **B** [ByteDance completes $290 million fundraising for AI drug unit after its spin-off, sources say](https://www.streetinsider.com/Reuters/ByteDance%2Bcompletes%2B%24290%2Bmillion%2Bfundraising%2Bfor%2BAI%2Bdrug%2Bunit%2Bafter%2Bits%2Bspin-off%2C%2Bsources%2Bsay/27066461.html) · Reuters via StreetInsider · accessed 2026-11-17
 - **B** [ByteDance’s drug unit presents AI-designed therapies at global conferences](https://scmp.com/tech/article/3352032/bytedances-drug-unit-presents-ai-designed-therapies-global-conferences) · SCMP · accessed 2026-11-17
+
+## Curator notes
+
+*Editorial opinion.*
+
+Anew Labs lists macrocyclic-peptide research on its [official research page](https://anewbt.com/research/dpsa/). This is an organization-reported research activity, not a confirmation of asset ownership or a reviewed loop assessment.

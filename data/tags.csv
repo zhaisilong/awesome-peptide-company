@@ -1,5 +1,7 @@
 entity_id,facet,value,evidence_ids
+ailsynbio,modality,macrocyclic_peptide,hkex-20261113-hansoh-ailsynbio
 anew-labs,dry,property_prediction,anew-labs-dpsa
+anew-labs,modality,macrocyclic_peptide,anew-labs-dpsa
 astrazeneca-molecular-ai,dry,generative_design,github-molecularai-pepinvent
 astrazeneca-molecular-ai,dry,property_prediction,github-molecularai-pepinvent
 astrazeneca-molecular-ai,dry,reinforcement_learning,github-molecularai-pepinvent

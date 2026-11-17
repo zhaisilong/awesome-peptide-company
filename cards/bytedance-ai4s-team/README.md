@@ -57,3 +57,9 @@ These are parent-level relationships and do not imply participation by this team
 
 - **A** [Benchmarking AlphaFold3-like Methods for Protein-Peptide Complex Prediction](https://www.biorxiv.org/content/10.1101/2025.03.09.642277v2.full) · bioRxiv · accessed 2026-11-17
 - **A** [Protenix: Protein + X (README and update log)](https://github.com/bytedance/Protenix) · GitHub · accessed 2026-11-17
+
+## Curator notes
+
+*Editorial opinion.*
+
+The [official Protenix README](https://github.com/bytedance/Protenix) contains conflicting license language: its general license section describes Apache-2.0 for the project, while its Protenix-v2 update says v2 weights are proprietary and restricted. The catalog does not assign a single license to all versions and weights; consult the rights holder for clarification.
