@@ -1,5 +1,7 @@
 # By loop level
 
+[← Home](../README.md) · [Types](by-type.md) · [Status](by-status.md) · [Modalities](by-modality.md)
+
 ## Not assessed
 
 - [Anew Labs](../cards/anew-labs/README.md)

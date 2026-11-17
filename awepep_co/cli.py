@@ -3,6 +3,7 @@
 import argparse
 import csv
 import io
+import math
 import subprocess
 import sys
 from datetime import date
@@ -16,6 +17,26 @@ def _date(value):
         return date.fromisoformat(value)
     except ValueError as exc:
         raise argparse.ArgumentTypeError("expected a date in YYYY-MM-DD format") from exc
+
+
+def _nonnegative_int(value):
+    try:
+        result = int(value)
+        if result < 0:
+            raise ValueError
+        return result
+    except ValueError as exc:
+        raise argparse.ArgumentTypeError("expected a non-negative integer") from exc
+
+
+def _timeout(value):
+    try:
+        result = float(value)
+        if not math.isfinite(result) or result <= 0:
+            raise ValueError
+        return result
+    except ValueError as exc:
+        raise argparse.ArgumentTypeError("expected a positive timeout in seconds") from exc
 
 
 def _diagnostics(root, as_of, base_ref, strict=False):
@@ -105,10 +126,49 @@ def main(argv=None):
     build.add_argument("--check", action="store_true", help="Compare generated files without writing")
     build.add_argument("--base-ref", help="Compare records and generate a change preview against this revision")
     build.add_argument("--root", type=Path, default=Path.cwd(), help=argparse.SUPPRESS)
+    add = sub.add_parser("add", help="Validate and append a source record")
+    add.add_argument("kind", choices=("entity", "event", "evidence", "asset"))
+    add.add_argument("--field", action="append", required=True, metavar="NAME=VALUE")
+    add.add_argument("--root", type=Path, default=Path.cwd(), help=argparse.SUPPRESS)
+    links = sub.add_parser("check-links", help="Check evidence URLs without changing records")
+    links.add_argument("--timeout", type=_timeout, default=10.0, help="Timeout per request in seconds")
+    links.add_argument("--root", type=Path, default=Path.cwd(), help=argparse.SUPPRESS)
+    stale = sub.add_parser("stale", help="Report stale or unverified entities")
+    stale.add_argument("--days", type=_nonnegative_int, default=365)
+    stale.add_argument("--as-of", type=_date, default=date.today())
+    stale.add_argument("--root", type=Path, default=Path.cwd(), help=argparse.SUPPRESS)
     args = parser.parse_args(argv)
     try:
         if args.command == "validate":
             return 0 if _diagnostics(args.root.resolve(), args.as_of, args.base_ref, args.strict) else 1
+        if args.command == "add":
+            from .add import add_record
+            issues = add_record(args.root.resolve(), args.kind, args.field)
+            for issue in issues:
+                print(str(issue))
+            print("Added {} record.".format(args.kind))
+            return 0
+        if args.command == "check-links":
+            from .linkcheck import check_links
+            results = check_links(args.root.resolve(), timeout=args.timeout)
+            for result in results:
+                print("{} | {} | {} | {} | {}".format(result.status.upper(), result.evidence_id, result.field, result.url, result.detail))
+            print("Checked {} links; {} broken, {} unknown.".format(len(results), sum(r.status == "broken" for r in results), sum(r.status == "unknown" for r in results)))
+            return int(any(r.status == "broken" for r in results))
+        if args.command == "stale":
+            from .stale import stale_report
+            issues = validation.validate(args.root.resolve(), as_of=args.as_of)
+            errors = [issue for issue in issues if issue.severity == "error"]
+            for issue in errors:
+                print(str(issue), file=sys.stderr)
+            if errors:
+                return 1
+            records = stale_report(validation.load_tables(args.root.resolve()), as_of=args.as_of, days=args.days)
+            for record in records:
+                print("{} | {} | {} | {} | {}".format(record["entity_id"], record["current_status"], record["last_verified"] or "Unknown", record["reason"], record["age_days"] if record["age_days"] is not None else "Unknown"))
+            if not records:
+                print("No organizations need review.")
+            return 0
         return _build(args)
     except (OSError, ValueError, csv.Error) as exc:
         print("Error: {}".format(exc), file=sys.stderr)

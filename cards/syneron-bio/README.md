@@ -1,8 +1,10 @@
 # Syneron Bio
 
+[← Home](../../README.md) · [Browse by type](../../index/by-type.md) · [By status](../../index/by-status.md) · [By modality](../../index/by-modality.md)
+
 Macrocyclic peptide company with the Synova platform and an AstraZeneca collaboration.
 
-ai_native_biotech · active · core · Not assessed · CN
+**Type:** AI-native biotech · **Status:** Active · **Relevance:** Core · **Loop:** Not assessed · **Region:** CN
 
 
 ## Overview
@@ -18,12 +20,12 @@ ai_native_biotech · active · core · Not assessed · CN
 
 ## Peptide relevance and tags
 
-**Relevance:** core.
+**Relevance:** Core.
 
-- **modality:** macrocyclic_peptide
-- **therapeutic_area:** autoimmune
-- **therapeutic_area:** metabolic
-- **therapeutic_area:** rare_disease
+- **Modality:** Macrocyclic peptide
+- **Therapeutic area:** Autoimmune
+- **Therapeutic area:** Metabolic
+- **Therapeutic area:** Rare disease
 
 ## Dry–wet loop
 

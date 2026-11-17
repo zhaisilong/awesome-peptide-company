@@ -9,13 +9,29 @@ python -m pip install -e '.[dev]'
 python -m pytest
 ```
 
-The CSV files in `data/` are the authoritative records. Add sources to `evidence.csv` and cite their IDs from relevant records. Consult the [inclusion](docs/inclusion-policy.md), [evidence](docs/evidence-policy.md), and [taxonomy](docs/taxonomy.md) policies before editing. Preserve IDs and existing entities and events; request maintainer review for exceptions. Findings with incomplete or conflicting evidence must be described conservatively. Preserve the original test fixtures: production source verification is tracked separately in [source review](docs/source-review.md).
+The CSV files in `data/` are the authoritative records. Add sources to `evidence.csv` and cite source IDs from relevant records. Consult the [inclusion](docs/inclusion-policy.md), [evidence](docs/evidence-policy.md), and [taxonomy](docs/taxonomy.md) policies before editing. Preserve IDs and existing entities and events; request maintainer review for exceptions. Findings with incomplete or conflicting evidence must be described conservatively. Preserve the original test fixtures: production source verification is tracked separately in [source review](docs/source-review.md).
+
+## Adding records
+
+Edit the source CSVs, or use `awepep-co add` with repeated `--field name=value` arguments for an `entity`, `event`, `evidence`, or `asset`. Field names and required values are defined by `schema/tables.json` and the controlled vocabulary in `vocab/`. For example, use `awepep-co add evidence --field evidence_id=... --field url=...` with the remaining required fields. All values must describe verified sources or conservatively identified reports. The command validates the resulting dataset, checks keys and references, and writes a sorted CSV only if validation succeeds. It does not generate pages.
+
+## Review and generation
 
 ```bash
 awepep-co validate
 awepep-co validate --base-ref origin/main
 awepep-co build --as-of "$(cat .build-date)"
+awepep-co build --as-of "$(cat .build-date)" --check
 python -m pytest
 ```
 
-Generated files under `cards/`, `index/`, and the marked README section must be updated by the build, not edited manually. `build/` contains local artifacts and is ignored. A build is deterministic for the same input and `--as-of` date; source research is a separate, network-enabled activity. The committed `.build-date` sets the snapshot checked by CI. When adding later events or advancing the published snapshot, update this date and regenerate the pages in the same change. Review all changed records and generated pages. Automated commits, scheduled checks, and release publication are future work.
+Generated files under `cards/`, `index/`, and the marked README section must be updated by the build, not edited manually. Include regenerated pages with source changes in the pull request. `build/` contains local artifacts and is ignored. A build is deterministic for the same input and `--as-of` date; source research is a separate, network-enabled activity. The committed `.build-date` sets the snapshot checked by CI. When adding later events or advancing the published snapshot, update this date and regenerate the pages in the same change. Review all changed records and generated pages.
+
+## Source maintenance
+
+```bash
+awepep-co check-links
+awepep-co stale --days 365 --as-of "$(cat .build-date)"
+```
+
+`check-links` performs read-only network requests for source and existing archive URLs. It reports `ok`, `broken`, or `unknown`; access restrictions, rate limits, and network failures are not proof of a broken link. It never creates archives or edits records. `stale` lists active entities past the age threshold, plus full entries without a verification date. Review a source before manually updating its `accessed` date. The default age is 365 days; both commands leave data unchanged. Routine `validate` and `build` remain offline.

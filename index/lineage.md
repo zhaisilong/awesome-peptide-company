@@ -1,5 +1,7 @@
 # Lineage
 
+[← Home](../README.md) · [Types](by-type.md) · [Status](by-status.md) · [Modalities](by-modality.md)
+
 ```mermaid
 flowchart LR
     e0["Anew Labs"]
@@ -13,17 +15,17 @@ flowchart LR
     a2["Protenix"]:::asset
     a3["REINVENT 4"]:::asset
     a4["Synova"]:::asset
-    e0 -.->|"spun_out"| e3
-    e1 -->|"parent"| e2
-    e3 -->|"parent"| e4
-    e5 -->|"partnership"| e1
-    e0 -->|"developer"| a0
-    e1 -->|"licensee"| a4
-    e2 -->|"developer"| a1
-    e2 -->|"developer"| a3
-    e4 -->|"developer"| a2
-    e4 -->|"maintainer"| a2
-    e5 -->|"owner"| a4
+    e0 -.->|"Spun out"| e3
+    e1 -->|"Parent"| e2
+    e3 -->|"Parent"| e4
+    e5 -->|"Partnership"| e1
+    e0 -->|"Developer"| a0
+    e1 -->|"Licensee"| a4
+    e2 -->|"Developer"| a1
+    e2 -->|"Developer"| a3
+    e4 -->|"Developer"| a2
+    e4 -->|"Maintainer"| a2
+    e5 -->|"Owner"| a4
     classDef stub stroke-dasharray: 5 5
     classDef asset fill:#eeeeee
 ```

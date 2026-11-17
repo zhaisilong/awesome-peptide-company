@@ -1,14 +1,16 @@
 # By type
 
-## ai_native_biotech
+[← Home](../README.md) · [Types](by-type.md) · [Status](by-status.md) · [Modalities](by-modality.md)
+
+## AI-native biotech
 
 - [Anew Labs](../cards/anew-labs/README.md)
 - [Syneron Bio](../cards/syneron-bio/README.md)
 
-## bigtech_ai_team
+## Technology company AI team
 
 - [ByteDance AI4S team](../cards/bytedance-ai4s-team/README.md)
 
-## pharma_ai_team
+## Pharmaceutical AI team
 
 - [AstraZeneca Molecular AI](../cards/astrazeneca-molecular-ai/README.md)

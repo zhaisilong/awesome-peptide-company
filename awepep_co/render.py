@@ -14,8 +14,44 @@ from liquid import Template
 from .resolve import event_key
 
 BEGIN, END = "<!-- BEGIN:INDEX -->", "<!-- END:INDEX -->"
+INDEX_NAV = "[← Home](../README.md) · [Types](by-type.md) · [Status](by-status.md) · [Modalities](by-modality.md)"
 RESOLVED_COLUMNS = ["entity_id", "name", "entity_type", "inclusion", "parent_id", "peptide_relevance", "relevance_evidence_ids", "country", "hq_city", "website", "one_liner", "current_status", "status_since", "pending_flags", "last_verified", "needs_review", "successors", "predecessors"]
 INDEX_COLUMNS = ["entity_id", "name", "one_liner", "entity_type", "current_status", "loop_level", "peptide_relevance", "country", "last_verified"]
+
+# Presentation labels are separate from source vocabulary and data exports.
+DISPLAY_LABELS = {
+    "entity_type": {
+        "ai_native_biotech": "AI-native biotech", "pharma_ai_team": "Pharmaceutical AI team",
+        "bigtech_ai_team": "Technology company AI team", "peptide_therapeutics": "Peptide therapeutics",
+        "platform_vendor": "Platform vendor", "cdmo": "CDMO", "parent_org": "Parent organization",
+    },
+    "status": {
+        "active": "Active", "in_transition": "In transition", "inactive": "Inactive",
+        "closed": "Closed", "acquired": "Acquired", "merged": "Merged", "unknown": "Unknown",
+    },
+    "relevance": {"core": "Core", "adjacent": "Adjacent", "infrastructure": "Infrastructure"},
+    "facet": {
+        "modality": "Modality", "dry": "Computational methods", "wet": "Experimental capabilities",
+        "therapeutic_area": "Therapeutic area", "stage_max": "Development stage",
+    },
+    "tag": {
+        "macrocyclic_peptide": "Macrocyclic peptide", "linear_peptide": "Linear peptide",
+        "stapled_peptide": "Stapled peptide", "bicyclic_peptide": "Bicyclic peptide",
+        "peptide_drug_conjugate": "Peptide–drug conjugate", "incretin": "Incretin",
+        "antimicrobial_peptide": "Antimicrobial peptide", "spps_inhouse": "In-house SPPS",
+        "dna_encoded_library": "DNA-encoded library", "in_vivo": "In vivo",
+        "foundation_model_inhouse": "In-house foundation model",
+        "cmc": "CMC", "llm_agent": "LLM agent", "phase1": "Phase 1",
+        "phase2": "Phase 2", "phase3": "Phase 3", "na": "Not applicable",
+    },
+    "review": {"proposed": "pending review", "reviewed": "reviewed"},
+}
+
+
+def _display(category, value):
+    if not value:
+        return "Not specified"
+    return DISPLAY_LABELS.get(category, {}).get(value, str(value).replace("_", " ").capitalize())
 
 
 def _list(value):
@@ -92,7 +128,7 @@ def render(tables, resolved, as_of, readme, root):
     entities = {row["entity_id"]: row for row in resolved}
     evidence = {row["evidence_id"]: row for row in tables.get("evidence", [])}
     asset_map = {row["asset_id"]: row for row in tables.get("assets", [])}
-    full = [e for e in resolved if e.get("inclusion") == "full"]
+    full = sorted((e for e in resolved if e.get("inclusion") == "full"), key=lambda e: e["entity_id"])
     events = sorted([e for e in tables.get("events", []) if event_key(e)[0] <= as_of], key=event_key)
     loops = defaultdict(list)
     for row in tables.get("loop_assessments", []):
@@ -106,8 +142,23 @@ def render(tables, resolved, as_of, readme, root):
     out["index/index.csv"] = _csv(rows, INDEX_COLUMNS)
     out["index/index.json"] = (json.dumps([{k: row.get(k, "") for k in INDEX_COLUMNS} for row in rows], ensure_ascii=False, indent=2) + "\n").encode()
     out["build/peploop.sqlite"] = _sqlite(tables, resolved, root)
-    indexrows = [{**r, "name": _anchor_link(r["entity_id"], entities, "cards")} for r in rows]
-    indextext = _table(indexrows, ["Name", "Summary", "Type", "Status", "Loop", "Relevance", "Region", "Last verified"], ["name", "one_liner", "entity_type", "current_status", "loop_level", "peptide_relevance", "country", "last_verified"])
+    indexlines = []
+    for row in rows:
+        metadata = [
+            _display("entity_type", row.get("entity_type")),
+            _display("status", row.get("current_status")),
+            _display("relevance", row.get("peptide_relevance")) + " relevance",
+        ]
+        if row.get("country"):
+            metadata.append(row["country"])
+        if row.get("pending_flags"):
+            metadata.append("⚠ Report pending confirmation")
+        indexlines.append("- **" + _anchor_link(row["entity_id"], entities, "cards") + "**<br>")
+        if row.get("one_liner"):
+            indexlines.append("  " + row["one_liner"] + "<br>")
+        indexlines.append("  " + " · ".join(metadata))
+        indexlines.append("")
+    indextext = "\n".join(indexlines).rstrip() + "\n" if indexlines else "No organizations recorded.\n"
     if readme.count(BEGIN) != 1 or readme.count(END) != 1 or readme.index(BEGIN) > readme.index(END):
         raise ValueError("README must contain one ordered BEGIN:INDEX and END:INDEX marker")
     readme = readme[:readme.index(BEGIN) + len(BEGIN)] + "\n\n" + indextext + "\n" + readme[readme.index(END):]
@@ -121,14 +172,14 @@ def render(tables, resolved, as_of, readme, root):
         banner = ""
         if e["pending_flags"] or e["current_status"] != "active":
             flags = [ev for ev in own_events if ev.get("event_id") in e["pending_flags"]]
-            banner = "> ⚠ Status: " + e["current_status"] + ". " + " ".join("Reported, unconfirmed: " + ev.get("summary", "") for ev in flags) + "\n"
+            banner = "> ⚠ Status: " + _display("status", e["current_status"]) + ". " + " ".join(("Rumor, unconfirmed: " if ev.get("confidence") == "rumor" else "Reported, unconfirmed: ") + ev.get("summary", "") for ev in flags) + "\n"
         parent = entities.get(e.get("parent_id"), {})
         info = [("Headquarters", ", ".join(filter(None, [e.get("hq_city"), e.get("country")]))), ("Parent", parent.get("name", "")), ("Website", e.get("website", "")), ("Aliases", ", ".join(aliases)), ("Last verified", e.get("last_verified", ""))]
         overview = _table([{"key": key, "value": value or "—"} for key, value in info], ["Field", "Value"], ["key", "value"])
         tags = sorted((r.get("facet", ""), r.get("value", "")) for r in tables.get("tags", []) if r.get("entity_id") == eid)
         relevance_sources = ' '.join(f"[{i}]({evidence[i].get('url', '')})" for i in _list(e.get("relevance_evidence_ids", "")) if i in evidence)
-        relevance = "**Relevance:** " + (e.get("peptide_relevance") or "Not specified") + "." + (" " + relevance_sources if relevance_sources else "") + "\n\n" + ("\n".join(f"- **{facet}:** {value}" for facet, value in tags) or "No tags.")
-        looptext = f"**{loop.get('level')} · {loop.get('evidence_level')} · {loop.get('review_status')}** ({loop.get('as_of')})\n\n{loop.get('rationale', '')}" if loop else "Not assessed."
+        relevance = "**Relevance:** " + _display("relevance", e.get("peptide_relevance")) + "." + (" " + relevance_sources if relevance_sources else "") + "\n\n" + ("\n".join(f"- **{_display('facet', facet)}:** {_display('tag', value)}" for facet, value in tags) or "No tags.")
+        looptext = f"**{loop.get('level')} · {loop.get('evidence_level')} · {_display('review', loop.get('review_status'))}** ({loop.get('as_of')})\n\n{loop.get('rationale', '')}" if loop else "Not assessed."
         roles = [r for r in tables.get("asset_roles", []) if r.get("entity_id") == eid and r.get("start", "") <= as_of.isoformat()]
         # Show all competing claims for each asset, including claims by other entities.
         asset_ids = {r.get("asset_id") for r in roles}
@@ -171,13 +222,20 @@ def render(tables, resolved, as_of, readme, root):
             sources.append(f"- **{src.get('tier', '')}** [{src.get('title') or key}]({src.get('url', '')}) · {src.get('publisher', '')} · accessed {src.get('accessed', '')}{archive}")
         note_path = root / "notes" / (eid + ".md")
         notes = "## Curator notes\n\n*Editorial opinion.*\n\n" + note_path.read_text(encoding="utf-8").strip() if note_path.is_file() else ""
-        badges = " · ".join(filter(None, [e.get("entity_type"), e.get("current_status"), e.get("peptide_relevance"), (loop.get("level", "") + " · " + loop.get("evidence_level", "")) if loop else "Not assessed", e.get("country")]))
+        badges = " · ".join(filter(None, [
+            "**Type:** " + _display("entity_type", e.get("entity_type")),
+            "**Status:** " + _display("status", e.get("current_status")),
+            "**Relevance:** " + _display("relevance", e.get("peptide_relevance")),
+            "**Loop:** " + (loop.get("level", "") + " · " + loop.get("evidence_level", "") + " · " + _display("review", loop.get("review_status")) if loop else "Not assessed"),
+            ("**Region:** " + e["country"]) if e.get("country") else "",
+        ]))
         content = template.render(name=e.get("name", eid), one_liner=e.get("one_liner", ""), badges=badges, banner=banner, overview=overview, relevance=relevance, loop=looptext, assets="\n".join(asset_lines) or "No assets recorded.", timeline="\n".join(timeline) or "No events recorded.", parent_relations=parenttext, papers="\n".join(papers) or "No papers linked.", sources="\n".join(sources) or "No sources recorded.", notes=notes)
         out[f"cards/{eid}/README.md"] = (content.rstrip() + "\n").encode("utf-8")
-    def grouped(filename, title, group_rows):
-        lines = [f"# {title}", ""]
+    def grouped(filename, title, group_rows, category=None):
+        lines = [f"# {title}", "", INDEX_NAV, ""]
         for key in sorted(group_rows):
-            lines.extend([f"## {key or 'Not specified'}", ""])
+            label = _display(category, key) if category else (key or 'Not specified')
+            lines.extend([f"## {label}", ""])
             lines.extend(f"- {_anchor_link(eid, entities)}" for eid in sorted(group_rows[key]))
             lines.append("")
         out["index/" + filename] = ("\n".join(lines).rstrip() + "\n").encode("utf-8")
@@ -186,7 +244,7 @@ def render(tables, resolved, as_of, readme, root):
         groups = defaultdict(set)
         for e in full:
             groups[e.get(field, "")].add(e["entity_id"])
-        grouped(filename, title, groups)
+        grouped(filename, title, groups, {"entity_type": "entity_type", "current_status": "status"}.get(field))
     groups = defaultdict(set)
     for e in full:
         loop = latest_loop.get(e["entity_id"])
@@ -202,8 +260,8 @@ def render(tables, resolved, as_of, readme, root):
     for e in full:
         if e["entity_id"] not in tagged:
             groups["Not specified"].add(e["entity_id"])
-    grouped("by-modality.md", "By modality", groups)
-    lines = ["# Assets", ""]
+    grouped("by-modality.md", "By modality", groups, "tag")
+    lines = ["# Assets", "", INDEX_NAV, ""]
     for aid, asset in sorted(asset_map.items()):
         title = f"[{asset.get('name', aid)}]({asset['url']})" if asset.get("url") else asset.get("name", aid)
         lines += [f"## {title}", "", asset.get("description", ""), ""]
@@ -237,7 +295,7 @@ def render(tables, resolved, as_of, readme, root):
     aids = {aid: f"a{i}" for i, aid in enumerate(sorted({a for _, a, _, _ in asset_edges}))}
     def mermaid(value):
         return str(value).replace('"', "'").replace("\n", " ")
-    diagram = ["# Lineage", "", "```mermaid", "flowchart LR"]
+    diagram = ["# Lineage", "", INDEX_NAV, "", "```mermaid", "flowchart LR"]
     for eid in sorted(nodes):
         entity = entities[eid]
         diagram.append(f'    {ids[eid]}["{mermaid(entity.get("name") or eid)}"]' + (":::stub" if entity.get("inclusion") == "stub" else ""))
@@ -245,14 +303,14 @@ def render(tables, resolved, as_of, readme, root):
         diagram.append(f'    {aids[aid]}["{mermaid(asset_map[aid].get("name") or aid)}"]:::asset')
     for a, b, label, confidence in sorted(edges):
         arrow = "-->" if confidence == "confirmed" else "-.->"
-        diagram.append(f'    {ids[a]} {arrow}|"{mermaid(label)}"| {ids[b]}')
+        diagram.append(f'    {ids[a]} {arrow}|"{mermaid(_display("event", label))}"| {ids[b]}')
     for eid, aid, role, confidence in sorted(asset_edges):
         arrow = "-->" if confidence == "confirmed" else "-.->"
-        diagram.append(f'    {ids[eid]} {arrow}|"{mermaid(role)}"| {aids[aid]}')
+        diagram.append(f'    {ids[eid]} {arrow}|"{mermaid(_display("role", role))}"| {aids[aid]}')
     diagram += ["    classDef stub stroke-dasharray: 5 5", "    classDef asset fill:#eeeeee", "```", ""]
     out["index/lineage.md"] = "\n".join(diagram).encode("utf-8")
     recent = [ev for ev in events if as_of - timedelta(days=90) <= event_key(ev)[0] <= as_of]
-    lines = ["# Recent changes", "", f"Events within 90 days of {as_of.isoformat()}.", ""]
+    lines = ["# Recent changes", "", INDEX_NAV, "", f"Events within 90 days of {as_of.isoformat()}.", ""]
     for ev in reversed(recent):
         if ev.get("entity_id") not in entities:
             continue

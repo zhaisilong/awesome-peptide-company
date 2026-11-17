@@ -1,5 +1,7 @@
 # Recent changes
 
+[← Home](../README.md) · [Types](by-type.md) · [Status](by-status.md) · [Modalities](by-modality.md)
+
 Events within 90 days of 2026-11-17.
 
 - **2026-09-19** [Anew Labs](../cards/anew-labs/README.md) · confirmed: Anew Labs presented a technical report for AnewDDE.

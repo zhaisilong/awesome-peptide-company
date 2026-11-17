@@ -1,8 +1,10 @@
 # ByteDance AI4S team
 
+[← Home](../../README.md) · [Browse by type](../../index/by-type.md) · [By status](../../index/by-status.md) · [By modality](../../index/by-modality.md)
+
 AI for Science team at ByteDance that developed the Protenix structure prediction model.
 
-bigtech_ai_team · active · infrastructure · Not assessed
+**Type:** Technology company AI team · **Status:** Active · **Relevance:** Infrastructure · **Loop:** Not assessed
 
 
 ## Overview
@@ -18,9 +20,9 @@ bigtech_ai_team · active · infrastructure · Not assessed
 
 ## Peptide relevance and tags
 
-**Relevance:** infrastructure. [biorxiv-20250313-protein-peptide-benchmark](https://www.biorxiv.org/content/10.1101/2025.03.09.642277v2.full)
+**Relevance:** Infrastructure. [biorxiv-20250313-protein-peptide-benchmark](https://www.biorxiv.org/content/10.1101/2025.03.09.642277v2.full)
 
-- **dry:** structure_prediction
+- **Computational methods:** Structure prediction
 
 ## Dry–wet loop
 

@@ -1,8 +1,10 @@
 # Anew Labs
 
+[← Home](../../README.md) · [Browse by type](../../index/by-type.md) · [By status](../../index/by-status.md) · [By modality](../../index/by-modality.md)
+
 AI drug discovery company with peptide-related research and experimental programmes.
 
-ai_native_biotech · active · infrastructure · Not assessed · CN
+**Type:** AI-native biotech · **Status:** Active · **Relevance:** Infrastructure · **Loop:** Not assessed · **Region:** CN
 
 
 ## Overview
@@ -18,9 +20,9 @@ ai_native_biotech · active · infrastructure · Not assessed · CN
 
 ## Peptide relevance and tags
 
-**Relevance:** infrastructure. [anew-labs-dpsa](https://anewbt.com/research/dpsa/)
+**Relevance:** Infrastructure. [anew-labs-dpsa](https://anewbt.com/research/dpsa/)
 
-- **dry:** property_prediction
+- **Computational methods:** Property prediction
 
 ## Dry–wet loop
 

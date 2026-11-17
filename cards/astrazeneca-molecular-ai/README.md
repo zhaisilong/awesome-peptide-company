@@ -1,8 +1,10 @@
 # AstraZeneca Molecular AI
 
+[← Home](../../README.md) · [Browse by type](../../index/by-type.md) · [By status](../../index/by-status.md) · [By modality](../../index/by-modality.md)
+
 Molecular AI department of AstraZeneca R&D with open-source generative design tools including PepINVENT.
 
-pharma_ai_team · active · adjacent · Not assessed · SE
+**Type:** Pharmaceutical AI team · **Status:** Active · **Relevance:** Adjacent · **Loop:** Not assessed · **Region:** SE
 
 
 ## Overview
@@ -18,12 +20,12 @@ pharma_ai_team · active · adjacent · Not assessed · SE
 
 ## Peptide relevance and tags
 
-**Relevance:** adjacent. [github-molecularai-pepinvent](https://github.com/MolecularAI/PepINVENT)
+**Relevance:** Adjacent. [github-molecularai-pepinvent](https://github.com/MolecularAI/PepINVENT)
 
-- **dry:** generative_design
-- **dry:** property_prediction
-- **dry:** reinforcement_learning
-- **modality:** macrocyclic_peptide
+- **Computational methods:** Generative design
+- **Computational methods:** Property prediction
+- **Computational methods:** Reinforcement learning
+- **Modality:** Macrocyclic peptide
 
 ## Dry–wet loop
 

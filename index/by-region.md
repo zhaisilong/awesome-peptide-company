@@ -1,5 +1,7 @@
 # By region
 
+[← Home](../README.md) · [Types](by-type.md) · [Status](by-status.md) · [Modalities](by-modality.md)
+
 ## Not specified
 
 - [ByteDance AI4S team](../cards/bytedance-ai4s-team/README.md)
