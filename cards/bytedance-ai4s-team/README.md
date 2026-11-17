@@ -20,7 +20,7 @@ AI for Science team at ByteDance that developed the Protenix structure predictio
 
 ## Peptide relevance and tags
 
-**Relevance:** Infrastructure. [biorxiv-20250313-protein-peptide-benchmark](https://www.biorxiv.org/content/10.1101/2025.03.09.642277v2.full)
+**Relevance:** Infrastructure. [biorxiv-api-20250313-protein-peptide-benchmark](https://api.biorxiv.org/details/biorxiv/10.1101/2025.03.09.642277)
 
 - **Computational methods:** Structure prediction
 
@@ -55,7 +55,7 @@ These are parent-level relationships and do not imply participation by this team
 
 ## Sources
 
-- **A** [Benchmarking AlphaFold3-like Methods for Protein-Peptide Complex Prediction](https://www.biorxiv.org/content/10.1101/2025.03.09.642277v2.full) · bioRxiv · accessed 2026-11-17
+- **A** [Benchmarking AlphaFold3-like Methods for Protein-Peptide Complex Prediction (preprint metadata and abstract)](https://api.biorxiv.org/details/biorxiv/10.1101/2025.03.09.642277) · bioRxiv · accessed 2026-11-17
 - **A** [Protenix: Protein + X (README and update log)](https://github.com/bytedance/Protenix) · GitHub · accessed 2026-11-17
 
 ## Curator notes

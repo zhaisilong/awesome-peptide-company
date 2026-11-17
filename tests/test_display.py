@@ -61,6 +61,19 @@ def test_cards_and_indexes_show_readable_labels_and_navigation():
     assert "## Macrocyclic peptide" in output["index/by-modality.md"].decode()
 
 
+def test_relationship_graph_distinguishes_group_context_and_reports_dates():
+    output = presentation()
+    lineage = output["index/lineage.md"].decode()
+    assert 'Partnership (group context)' in lineage
+    assert 'License deal (group context)' in lineage
+    assert '"Partnership"' in lineage  # Syneron's direct group relationship remains direct.
+    assert 'subsidiary' in lineage.lower()
+    changes = output["index/changes.md"].decode()
+    peptway = next(line for line in changes.splitlines() if "Peptway" in line)
+    assert "Publication date" in peptway
+    assert "completion date" in peptway
+
+
 def test_unknown_labels_have_readable_fallback():
     tables = load_tables(ROOT)
     entity = next(row for row in tables["entities"] if row["entity_id"] == "anew-labs")

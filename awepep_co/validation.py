@@ -27,6 +27,7 @@ class Issue:
 _SCHEMA = json.loads((Path(__file__).resolve().parent / 'tables.json').read_text(encoding='utf-8'))
 HEADERS = {name: spec['columns'] for name, spec in _SCHEMA.items()}
 PRIMARY_KEYS = {name: spec['primary_key'] for name, spec in _SCHEMA.items()}
+EVIDENCE_IDENTITY_FIELDS = ('url', 'tier', 'origin_key', 'source_type')
 
 
 def load_tables(root):
@@ -50,6 +51,23 @@ def _datestr(value):
 
 def _values(value):
     return [v.strip() for v in (value or '').split(';') if v.strip()]
+
+
+def evidence_identity_conflicts(before, after):
+    """Return IDs whose previously referenced source identity was changed."""
+    referenced = set()
+    for table, rows in before.items():
+        if table == 'evidence':
+            continue
+        for row in rows:
+            for column, value in row.items():
+                if column.endswith('evidence_ids'):
+                    referenced.update(_values(value))
+    old_sources = {row['evidence_id']: row for row in before.get('evidence', [])}
+    new_sources = {row['evidence_id']: row for row in after.get('evidence', [])}
+    return sorted(eid for eid in referenced if eid in old_sources and (
+        eid not in new_sources or any(old_sources[eid][field] != new_sources[eid][field]
+                                     for field in EVIDENCE_IDENTITY_FIELDS)))
 
 
 def _vocab(root):
@@ -81,8 +99,8 @@ def _translation_source(key, tables):
 def validate(root, as_of=None, base_ref=None):
     """Return deterministic issues; never perform network requests or mutate inputs.
 
-    ``base_ref`` names a Git revision to compare for E09. If omitted, baseline
-    validation is explicitly skipped; callers running PR checks should supply it.
+    ``base_ref`` names a Git revision for E09 entity, event, and referenced
+    evidence protections. If omitted, baseline validation is skipped.
     """
     root = Path(root)
     issues = []
@@ -254,23 +272,37 @@ def validate(root, as_of=None, base_ref=None):
         if revision.returncode:
             add('E09', f'cannot read Git baseline {base_ref}: {revision.stderr.strip()}')
             return issues
-        for table in ('entities','events'):
+        baseline_tables = {}
+        for table in HEADERS:
             try:
                 exists = subprocess.run(['git','cat-file','-e',f'{base_ref}:data/{table}.csv'], cwd=root, capture_output=True)
                 if exists.returncode:
-                    add('I01', f'{table}.csv does not exist at baseline; no prior rows to compare', 'info')
+                    if table in ('entities', 'events'):
+                        add('I01', f'{table}.csv does not exist at baseline; no prior rows to compare', 'info')
                     continue
                 raw = subprocess.run(['git','show',f'{base_ref}:data/{table}.csv'], cwd=root, check=True, capture_output=True, text=True).stdout
                 old = csv.DictReader(io.StringIO(raw), strict=True)
                 if old.fieldnames != HEADERS[table]:
                     add('E01', f'baseline {table}.csv has invalid header')
                     continue
-                old_keys = {tuple(row[k] for k in PRIMARY_KEYS[table]) for row in old}
-                new_keys = {tuple(row[k] for k in PRIMARY_KEYS[table]) for row in tables[table]}
-                for key in sorted(old_keys - new_keys):
-                    add('E09', f'{table}.csv: removed existing key {key}')
+                old_rows = list(old)
+                if any(None in row or any(value is None for value in row.values()) for row in old_rows):
+                    add('E01', f'baseline {table}.csv has malformed row width')
+                    continue
+                baseline_tables[table] = old_rows
+                if table in ('entities', 'events'):
+                    old_rows_by_key = {tuple(row[k] for k in PRIMARY_KEYS[table]): row for row in old_rows}
+                    new_rows_by_key = {tuple(row[k] for k in PRIMARY_KEYS[table]): row for row in tables[table]}
+                    for key in sorted(old_rows_by_key.keys() - new_rows_by_key.keys()):
+                        add('E09', f'{table}.csv: removed existing key {key}')
+                    if table == 'events':
+                        for key in sorted(old_rows_by_key.keys() & new_rows_by_key.keys()):
+                            if old_rows_by_key[key] != new_rows_by_key[key]:
+                                add('E09', f'{table}.csv: modified existing event {key}')
             except (OSError, subprocess.CalledProcessError, csv.Error, KeyError) as exc:
                 add('E09', f'cannot read baseline {base_ref} for {table}: {exc}')
+        for evidence_id in evidence_identity_conflicts(baseline_tables, tables):
+            add('E09', f'evidence.csv: removed or changed identity of referenced source {evidence_id!r}')
     else:
-        add('I01', 'no Git baseline supplied; E09 deletion check skipped', 'info')
+        add('I01', 'no Git baseline supplied; E09 historical protections skipped', 'info')
     return issues

@@ -9,7 +9,7 @@ import sys
 from datetime import date
 from pathlib import Path
 
-from . import render, resolve, validation
+from . import history, render, resolve, validation
 
 
 def _date(value):
@@ -86,17 +86,41 @@ def _managed_files(root):
 
 def _build(args):
     root = args.root.resolve()
-    if not _diagnostics(root, args.as_of, args.base_ref):
+    output_root = args.output_dir.resolve() if args.output_dir else root
+    has_history = bool(history._snapshot_dirs(root))
+    source_root = root
+    if args.output_dir:
+        if output_root == root or root in output_root.parents and output_root.relative_to(root).parts[0] not in ("build",):
+            raise ValueError("historical output must be outside the source tree or under build/")
+        if not has_history:
+            raise ValueError("historical output requires a recorded baseline")
+        if not args.check and output_root.exists() and any(output_root.iterdir()):
+            raise ValueError("historical output directory must be empty")
+    if has_history:
+        history.check(root, current=not bool(args.output_dir))
+        source_root = history.select(root, args.as_of)
+        if not args.output_dir and source_root != history._snapshot_dirs(root)[-1] / "files":
+            raise ValueError("historical builds require --output-dir")
+    if args.base_ref and source_root != root and not _diagnostics(root, args.as_of, args.base_ref):
         return 1
-    tables = validation.load_tables(root)
+    if not _diagnostics(source_root, args.as_of, None if source_root != root else args.base_ref):
+        return 1
+    tables = resolve.tables_as_of(validation.load_tables(source_root), args.as_of)
     resolved = resolve.resolve(tables, args.as_of)
-    readme = (root / "README.md").read_text(encoding="utf-8")
-    outputs = render.render(tables, resolved, args.as_of, readme, root)
+    readme = (source_root / "README.md").read_text(encoding="utf-8")
+    outputs = render.render(tables, resolved, args.as_of, readme, source_root, template_root=root)
+    if args.output_dir:
+        for directory in ("assets", "docs"):
+            source_dir = source_root / directory
+            if source_dir.is_dir():
+                for file in source_dir.rglob("*"):
+                    if file.is_file():
+                        outputs[file.relative_to(source_root).as_posix()] = file.read_bytes()
     if args.base_ref:
         outputs["build/CHANGES_PREVIEW.md"] = _preview(root, args.base_ref)
-    tracked_outputs = {name for name in outputs if name == "README.md" or name.startswith(("cards/", "index/"))}
-    stale = _managed_files(root) - tracked_outputs
-    differences = sorted(name for name in tracked_outputs if not (root / name).is_file() or (root / name).read_bytes() != outputs[name])
+    tracked_outputs = {name for name in outputs if name == "README.md" or name.startswith(("cards/", "index/")) or (args.output_dir and name.startswith(("assets/", "docs/")))}
+    stale = _managed_files(output_root) - tracked_outputs
+    differences = sorted(name for name in tracked_outputs if not (output_root / name).is_file() or (output_root / name).read_bytes() != outputs[name])
     if args.check:
         for name in differences:
             print("Generated file differs: {}".format(name), file=sys.stderr)
@@ -104,9 +128,9 @@ def _build(args):
             print("Unexpected generated file: {}".format(name), file=sys.stderr)
         return int(bool(differences or stale))
     for name in sorted(stale):
-        (root / name).unlink()
+        (output_root / name).unlink()
     for name, content in sorted(outputs.items()):
-        path = root / name
+        path = output_root / name
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_bytes(content)
     print("Built {} files as of {}.".format(len(outputs), args.as_of.isoformat()))
@@ -124,8 +148,18 @@ def main(argv=None):
     build = sub.add_parser("build", help="Validate, resolve and render")
     build.add_argument("--as-of", type=_date, default=date.today())
     build.add_argument("--check", action="store_true", help="Compare generated files without writing")
+    build.add_argument("--output-dir", type=Path, help="Write historical snapshot to an empty, independent directory")
     build.add_argument("--base-ref", help="Compare records and generate a change preview against this revision")
     build.add_argument("--root", type=Path, default=Path.cwd(), help=argparse.SUPPRESS)
+    archive = sub.add_parser("history", help="Record and validate knowledge snapshots")
+    archive_sub = archive.add_subparsers(dest="history_command", required=True)
+    archive_record = archive_sub.add_parser("record")
+    archive_record.add_argument("--reason", required=True)
+    archive_record.add_argument("--root", type=Path, default=Path.cwd(), help=argparse.SUPPRESS)
+    archive_check = archive_sub.add_parser("check")
+    archive_check.add_argument("--require", action="store_true")
+    archive_check.add_argument("--base-ref")
+    archive_check.add_argument("--root", type=Path, default=Path.cwd(), help=argparse.SUPPRESS)
     add = sub.add_parser("add", help="Validate and append a source record")
     add.add_argument("kind", choices=("entity", "event", "evidence", "asset"))
     add.add_argument("--field", action="append", required=True, metavar="NAME=VALUE")
@@ -140,7 +174,17 @@ def main(argv=None):
     args = parser.parse_args(argv)
     try:
         if args.command == "validate":
+            history.check(args.root.resolve(), base_ref=args.base_ref)
             return 0 if _diagnostics(args.root.resolve(), args.as_of, args.base_ref, args.strict) else 1
+        if args.command == "history":
+            if args.history_command == "record":
+                if not _diagnostics(args.root.resolve(), date.today(), None):
+                    return 1
+                print("Recorded knowledge snapshot {}.".format(history.record(args.root.resolve(), args.reason)))
+            else:
+                history.check(args.root.resolve(), base_ref=args.base_ref, require=args.require)
+                print("Knowledge snapshot history is consistent.")
+            return 0
         if args.command == "add":
             from .add import add_record
             issues = add_record(args.root.resolve(), args.kind, args.field)

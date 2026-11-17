@@ -2,6 +2,8 @@
 
 [← Home](../README.md) · [Types](by-type.md) · [Status](by-status.md) · [Modalities](by-modality.md)
 
+Group context edges point to a parent group; see the company timeline for the signing subsidiary.
+
 ```mermaid
 flowchart LR
     e0["AilsynBio"]
@@ -19,8 +21,8 @@ flowchart LR
     a2["Protenix"]:::asset
     a3["REINVENT 4"]:::asset
     a4["Synova"]:::asset
-    e0 -->|"Partnership"| e6
-    e0 -->|"License deal"| e7
+    e0 -->|"Partnership (group context)"| e6
+    e0 -->|"License deal (group context)"| e7
     e1 -.->|"Spun out"| e4
     e2 -->|"Parent"| e3
     e4 -->|"Parent"| e5

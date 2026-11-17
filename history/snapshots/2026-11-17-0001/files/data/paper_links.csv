@@ -1,0 +1,5 @@
+subject_id,subject_kind,doi,awepep_id,relation
+pepinvent,asset,10.1039/d4sc07642g,,authored
+protenix,asset,10.1101/2025.01.08.631967,,authored
+protenix,asset,10.1101/2025.03.09.642277,,benchmarked
+reinvent4,asset,10.1186/s13321-024-00812-5,,authored

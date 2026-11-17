@@ -4,6 +4,8 @@ import shutil
 import subprocess
 from pathlib import Path
 
+import pytest
+
 from awepep_co.validation import HEADERS, validate
 
 
@@ -129,6 +131,40 @@ def test_baseline_without_tables_allows_new_tables(tmp_path):
     subprocess.run(['git','-c','user.name=Tester','-c','user.email=test@example.org','commit','-qm','baseline'], cwd=root, check=True)
     assert 'E09' not in codes(root, base_ref='HEAD')
     assert 'E09' in codes(root, base_ref='missing-revision')
+
+
+@pytest.mark.parametrize('field,value', [('url', 'https://example.org/changed'),
+                                       ('tier', 'A'), ('origin_key', 'other'),
+                                       ('source_type', 'paper')])
+def test_baseline_rejects_referenced_evidence_identity_change(tmp_path, field, value):
+    root = dataset(tmp_path)
+    subprocess.run(['git', 'init', '-q'], cwd=root, check=True)
+    subprocess.run(['git', 'add', 'data'], cwd=root, check=True)
+    subprocess.run(['git', '-c', 'user.name=Tester', '-c', 'user.email=test@example.org', 'commit', '-qm', 'baseline'], cwd=root, check=True)
+    with (root / 'data/evidence.csv').open(encoding='utf-8', newline='') as stream:
+        rows = list(csv.DictReader(stream))
+    rows[0][field] = value
+    write(root / 'data/evidence.csv', rows)
+    assert any(issue.code == 'E09' and 'referenced source' in issue.message
+               for issue in validate(root, as_of='2025-01-06', base_ref='HEAD'))
+
+
+def test_baseline_allows_source_metadata_and_rejects_event_edits(tmp_path):
+    root = dataset(tmp_path)
+    subprocess.run(['git', 'init', '-q'], cwd=root, check=True)
+    subprocess.run(['git', 'add', 'data'], cwd=root, check=True)
+    subprocess.run(['git', '-c', 'user.name=Tester', '-c', 'user.email=test@example.org', 'commit', '-qm', 'baseline'], cwd=root, check=True)
+    with (root / 'data/evidence.csv').open(encoding='utf-8', newline='') as stream:
+        sources = list(csv.DictReader(stream))
+    sources[0]['publisher'] = 'Corrected publisher'
+    write(root / 'data/evidence.csv', sources)
+    assert 'E09' not in codes(root, base_ref='HEAD')
+    with (root / 'data/events.csv').open(encoding='utf-8', newline='') as stream:
+        events = list(csv.DictReader(stream))
+    events[0]['summary'] = 'Changed historical event'
+    write(root / 'data/events.csv', events)
+    assert any(issue.code == 'E09' and 'modified existing event' in issue.message
+               for issue in validate(root, as_of='2025-01-06', base_ref='HEAD'))
 
 
 def test_packaged_schema_stays_in_sync():

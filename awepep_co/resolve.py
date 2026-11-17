@@ -34,6 +34,30 @@ def latest_date(event):
         return date.min
 
 
+def interval_contains(start, end, as_of):
+    """Conservatively require validity throughout any uncertain date range."""
+    if start and latest_date({"date": start}) > as_of:
+        return False
+    if end and event_key({"date": end})[0] < as_of:
+        return False
+    return True
+
+
+def tables_as_of(tables, as_of):
+    """Filter dated rows once for resolver, markdown and all data exports."""
+    if isinstance(as_of, str):
+        as_of = date.fromisoformat(as_of)
+    result = {name: list(rows) for name, rows in tables.items()}
+    result["events"] = [r for r in result.get("events", []) if latest_date(r) <= as_of]
+    result["aliases"] = [r for r in result.get("aliases", []) if interval_contains(r.get("valid_from", ""), r.get("valid_to", ""), as_of)]
+    result["loop_assessments"] = [r for r in result.get("loop_assessments", []) if not r.get("as_of") or latest_date({"date": r["as_of"]}) <= as_of]
+    result["assets"] = [r for r in result.get("assets", []) if not r.get("first_public_date") or latest_date({"date": r["first_public_date"]}) <= as_of]
+    asset_ids = {r.get("asset_id") for r in result["assets"]}
+    result["asset_roles"] = [r for r in result.get("asset_roles", []) if r.get("asset_id") in asset_ids and (not r.get("start") or latest_date({"date": r["start"]}) <= as_of)]
+    result["events"] = [r for r in result["events"] if not r.get("asset_id") or r["asset_id"] in asset_ids]
+    result["paper_links"] = [r for r in result.get("paper_links", []) if r.get("subject_kind") != "asset" or r.get("subject_id") in asset_ids]
+    return result
+
 def _ids(value):
     return [v.strip() for v in value.split(";") if v.strip()]
 
@@ -43,7 +67,7 @@ def resolve(tables, as_of):
     if isinstance(as_of, str):
         as_of = date.fromisoformat(as_of)
     evidence = {e["evidence_id"]: e for e in tables.get("evidence", [])}
-    events = [e for e in tables.get("events", []) if event_key(e)[0] <= as_of]
+    events = [e for e in tables.get("events", []) if latest_date(e) <= as_of]
     by_entity = {}
     for e in events:
         by_entity.setdefault(e["entity_id"], []).append(e)
@@ -83,7 +107,9 @@ def resolve(tables, as_of):
         for table in ("aliases", "events", "asset_roles", "tags", "loop_assessments"):
             for row in tables.get(table, []):
                 if row.get("entity_id") == eid:
-                    if table == "events" and event_key(row)[0] > as_of:
+                    if table == "events" and latest_date(row) > as_of:
+                        continue
+                    if table == "aliases" and not interval_contains(row.get("valid_from", ""), row.get("valid_to", ""), as_of):
                         continue
                     if table == "loop_assessments" and row.get("as_of", "") > as_of.isoformat():
                         continue

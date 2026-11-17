@@ -4,7 +4,8 @@ evidence_id,url,archive_url,title,publisher,source_type,tier,origin_key,publishe
 anew-labs-dpsa,https://anewbt.com/research/dpsa/,,AnewDPSA,Anew Labs,official,A,anew-labs-dpsa,,2026-11-17,en
 anew-labs-website,https://anewbt.com/,,Anew Labs,Anew Labs,official,A,anew-labs-website,,2026-11-17,en
 arxiv-202409-pepinvent,https://arxiv.org/abs/2409.14040,,PepINVENT: Generative peptide design beyond the natural amino acids,arXiv,preprint,A,arxiv-202409-pepinvent,2024-09-21,2026-11-17,en
-biorxiv-20250313-protein-peptide-benchmark,https://www.biorxiv.org/content/10.1101/2025.03.09.642277v2.full,,Benchmarking AlphaFold3-like Methods for Protein-Peptide Complex Prediction,bioRxiv,preprint,A,biorxiv-20250313-protein-peptide-benchmark,2025-03-13,2026-11-17,en
+biorxiv-20250313-protein-peptide-benchmark,https://www.biorxiv.org/content/10.1101/2025.03.09.642277v2.full,,Benchmarking AlphaFold3-like Methods for Protein-Peptide Complex Prediction,bioRxiv,preprint,A,biorxiv-20250313-protein-peptide-benchmark,2025-03-15,,en
+biorxiv-api-20250313-protein-peptide-benchmark,https://api.biorxiv.org/details/biorxiv/10.1101/2025.03.09.642277,,Benchmarking AlphaFold3-like Methods for Protein-Peptide Complex Prediction (preprint metadata and abstract),bioRxiv,preprint,A,biorxiv-20250313-protein-peptide-benchmark,2025-03-13,2026-11-17,en
 github-bytedance-protenix,https://github.com/bytedance/Protenix,,Protenix: Protein + X (README and update log),GitHub,repo,A,github-bytedance-protenix,,2026-11-17,en
 github-molecularai-org,https://github.com/MolecularAI,,AstraZeneca - Molecular AI (GitHub organization),GitHub,repo,A,github-molecularai-org,,2026-11-17,en
 github-molecularai-pepinvent,https://github.com/MolecularAI/PepINVENT,,MolecularAI/PepINVENT (repository README),GitHub,repo,A,github-molecularai-pepinvent,,2026-11-17,en

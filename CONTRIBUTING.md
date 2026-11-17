@@ -19,7 +19,11 @@ Edit the source CSVs, or use `awepep-co add` with repeated `--field name=value` 
 
 ## Review and generation
 
+After changing knowledge inputs, record a new snapshot with the actual current date before validating or generating pages. Review the snapshot alongside the source changes; see [historical snapshots](docs/history.md) for scope and historical builds.
+
 ```bash
+awepep-co history record --reason "Describe the verified changes"
+awepep-co history check --require --base-ref origin/main
 awepep-co validate
 awepep-co validate --base-ref origin/main
 awepep-co build --as-of "$(cat .build-date)"
@@ -27,7 +31,7 @@ awepep-co build --as-of "$(cat .build-date)" --check
 python -m pytest
 ```
 
-Generated files under `cards/`, `index/`, and the marked README section must be updated by the build, not edited manually. Include regenerated pages with source changes in the pull request. `build/` contains local artifacts and is ignored. A build is deterministic for the same input and `--as-of` date; source research is a separate, network-enabled activity. The committed `.build-date` sets the snapshot checked by CI. When adding later events or advancing the published snapshot, update this date and regenerate the pages in the same change. Review all changed records and generated pages.
+Generated files under `cards/`, `index/`, and the marked README section must be updated by the build, not edited manually. Include regenerated pages with source changes in the pull request. `build/` contains local artifacts and is ignored. A build is deterministic for the same input and `--as-of` date; source research is a separate, network-enabled activity. The committed `.build-date` sets the view checked by CI. When adding later events or advancing the published view, update this date and regenerate the pages in the same change. Review all changed records and generated pages.
 
 ## Source maintenance
 

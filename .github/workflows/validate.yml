@@ -25,5 +25,21 @@ jobs:
         env:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
         run: awepep-co validate --base-ref "$BASE_SHA"
+      - name: Validate push against its previous revision
+        if: github.event_name == 'push' && github.event.before != '0000000000000000000000000000000000000000'
+        env:
+          BEFORE_SHA: ${{ github.event.before }}
+        run: awepep-co validate --base-ref "$BEFORE_SHA"
+      - name: Check knowledge history against pull request base
+        if: github.event_name == 'pull_request'
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: awepep-co history check --require --base-ref "$BASE_SHA"
+      - name: Check knowledge history against previous push
+        if: github.event_name == 'push' && github.event.before != '0000000000000000000000000000000000000000'
+        env:
+          BEFORE_SHA: ${{ github.event.before }}
+        run: awepep-co history check --require --base-ref "$BEFORE_SHA"
+      - run: awepep-co history check --require
       - run: awepep-co validate
       - run: awepep-co build --as-of "$(cat .build-date)" --check

@@ -47,6 +47,67 @@ def add_evidence(workspace):
         writer.writerows(rows)
 
 
+def edit_source(workspace, evidence_id, **changes):
+    path = workspace / 'data/evidence.csv'
+    with path.open(encoding='utf-8', newline='') as stream:
+        reader = csv.DictReader(stream)
+        headers, rows = reader.fieldnames, list(reader)
+    row = next(row for row in rows if row['evidence_id'] == evidence_id)
+    row.update(changes)
+    with path.open('w', encoding='utf-8', newline='') as stream:
+        writer = csv.DictWriter(stream, fieldnames=headers, lineterminator='\n')
+        writer.writeheader()
+        writer.writerows(rows)
+
+
+@pytest.mark.parametrize('field,value', [
+    ('url', 'https://example.org/unrelated'),
+    ('tier', 'B'),
+    ('origin_key', 'another-origin'),
+    ('source_type', 'news'),
+])
+@pytest.mark.parametrize('evidence_id', [
+    'hkex-20261113-hansoh-ailsynbio',  # historical event
+    'pubmed-20250416-pepinvent',  # entity relevance, not an event
+])
+def test_referenced_source_identity_cannot_be_replaced(project, tmp_path, field, value, evidence_id):
+    workspace = tmp_path / 'candidate'
+    tx.prepare(project, workspace)
+    before = tx._files(project)
+    edit_source(workspace, evidence_id, **{field: value})
+    with pytest.raises(ValueError, match='source identity of referenced evidence'):
+        tx.apply(project, workspace, ['data/evidence.csv'])
+    assert tx._files(project) == before
+
+
+def test_referenced_source_metadata_can_be_corrected(project, tmp_path):
+    workspace = tmp_path / 'candidate'
+    tx.prepare(project, workspace)
+    edit_source(workspace, 'hkex-20261113-hansoh-ailsynbio',
+                publisher='Corrected publisher', archive_url='https://example.org/archive')
+    tx.apply(project, workspace, ['data/evidence.csv'])
+    assert 'Corrected publisher' in (project / 'data/evidence.csv').read_text()
+
+
+def test_new_source_may_have_any_valid_identity(project, tmp_path):
+    workspace = tmp_path / 'candidate'
+    tx.prepare(project, workspace)
+    add_evidence(workspace)
+    edit_source(workspace, 'zz-sample-source', url='https://example.org/new-location', origin_key='new-origin')
+    tx.apply(project, workspace, ['data/evidence.csv'])
+    assert 'https://example.org/new-location' in (project / 'data/evidence.csv').read_text()
+
+
+def test_removing_referenced_source_is_rejected(project, tmp_path):
+    workspace = tmp_path / 'candidate'
+    tx.prepare(project, workspace)
+    path = workspace / 'data/evidence.csv'
+    path.write_text('\n'.join(line for line in path.read_text().splitlines()
+                              if not line.startswith('hkex-20261113-hansoh-ailsynbio,')) + '\n')
+    with pytest.raises(ValueError, match='source identity of referenced evidence'):
+        tx.apply(project, workspace, ['data/evidence.csv'])
+
+
 def test_valid_multi_table_and_new_note_preserves_dirty_inputs(project, tmp_path):
     workspace = tmp_path / 'candidate'
     user_note = (project / 'notes/syneron-bio.md').read_bytes()
@@ -176,7 +237,7 @@ def test_changed_csv_must_be_utf8_lf_and_sorted(project, tmp_path, change):
     assert tx._files(project) == before
 
 
-@pytest.mark.parametrize('target', ['README.md', 'templates/card.liquid', 'cards/new/README.md', 'index/new.md', 'awepep_co/render.py'])
+@pytest.mark.parametrize('target', ['README.md', 'templates/card.liquid', 'cards/new/README.md', 'index/new.md', 'awepep_co/render.py', 'docs/policy.md', 'assets/card.png', 'history/manifest.json'])
 def test_render_input_change_before_apply_is_rejected(project, tmp_path, target):
     workspace = tmp_path / 'candidate'
     tx.prepare(project, workspace)
@@ -187,6 +248,28 @@ def test_render_input_change_before_apply_is_rejected(project, tmp_path, target)
     with pytest.raises(ValueError, match='render inputs or outputs changed'):
         tx.apply(project, workspace, ['data/entities.csv'])
     assert path.read_text() == 'New user content.\n'
+
+
+@pytest.mark.parametrize('target', ['docs/policy.md', 'assets/card.png', 'history/manifest.json'])
+@pytest.mark.parametrize('change', ['modify', 'delete'])
+def test_guard_protects_knowledge_inputs_after_apply(project, tmp_path, target, change):
+    path = project / target
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text('Original input.\n')
+    workspace = tmp_path / 'candidate'
+    tx.prepare(project, workspace)
+    edit_entity(workspace)
+    tx.apply(project, workspace, ['data/entities.csv'])
+    if change == 'modify':
+        path.write_text('Concurrent input.\n')
+    else:
+        path.unlink()
+    with pytest.raises(ValueError, match='render inputs or output files changed'):
+        tx.guard(project, workspace)
+    if change == 'modify':
+        assert path.read_text() == 'Concurrent input.\n'
+    else:
+        assert not path.exists()
 
 
 def test_guard_protects_generated_output_after_apply(project, tmp_path):

@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.1
+
+- Review company evidence, clarify reported dates and group relationships, and document PepStar as a candidate pending AI evidence.
+- Preserve historical knowledge snapshots from the migration baseline and support reproducible historical views.
+- Protect referenced evidence identities and improve the company curation skill.
+
 ## 0.3.0
 
 - Add a repository skill for evidence-backed organization curation and validated multi-table updates.

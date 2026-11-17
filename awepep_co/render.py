@@ -11,7 +11,7 @@ from pathlib import Path
 
 from liquid import Template
 
-from .resolve import event_key
+from .resolve import event_key, latest_date, interval_contains
 
 BEGIN, END = "<!-- BEGIN:INDEX -->", "<!-- END:INDEX -->"
 INDEX_NAV = "[← Home](../README.md) · [Types](by-type.md) · [Status](by-status.md) · [Modalities](by-modality.md)"
@@ -120,7 +120,7 @@ def _sqlite(tables, resolved, root):
         return path.read_bytes()
 
 
-def render(tables, resolved, as_of, readme, root):
+def render(tables, resolved, as_of, readme, root, template_root=None):
     """Return relative paths mapped to bytes, leaving all writes to the caller."""
     root = Path(root)
     if isinstance(as_of, str):
@@ -129,7 +129,7 @@ def render(tables, resolved, as_of, readme, root):
     evidence = {row["evidence_id"]: row for row in tables.get("evidence", [])}
     asset_map = {row["asset_id"]: row for row in tables.get("assets", [])}
     full = sorted((e for e in resolved if e.get("inclusion") == "full"), key=lambda e: e["entity_id"])
-    events = sorted([e for e in tables.get("events", []) if event_key(e)[0] <= as_of], key=event_key)
+    events = sorted([e for e in tables.get("events", []) if latest_date(e) <= as_of], key=event_key)
     loops = defaultdict(list)
     for row in tables.get("loop_assessments", []):
         if row.get("as_of", "") <= as_of.isoformat():
@@ -163,11 +163,11 @@ def render(tables, resolved, as_of, readme, root):
         raise ValueError("README must contain one ordered BEGIN:INDEX and END:INDEX marker")
     readme = readme[:readme.index(BEGIN) + len(BEGIN)] + "\n\n" + indextext + "\n" + readme[readme.index(END):]
     out["README.md"] = readme.replace("\r\n", "\n").encode("utf-8")
-    template = Template((root / "templates/card.liquid").read_text(encoding="utf-8"))
+    template = Template(((Path(template_root) if template_root else root) / "templates/card.liquid").read_text(encoding="utf-8"))
     for e in full:
         eid = e["entity_id"]
         own_events = [ev for ev in events if ev.get("entity_id") == eid]
-        aliases = sorted([r.get("alias", "") for r in tables.get("aliases", []) if r.get("entity_id") == eid])
+        aliases = sorted([r.get("alias", "") for r in tables.get("aliases", []) if r.get("entity_id") == eid and interval_contains(r.get("valid_from", ""), r.get("valid_to", ""), as_of)])
         loop = latest_loop.get(eid)
         banner = ""
         if e["pending_flags"] or e["current_status"] != "active":
@@ -281,7 +281,13 @@ def render(tables, resolved, as_of, readme, root):
                 continue
             if ev.get("event_id") in entities[a].get("superseded", []):
                 continue
-            edges.add((a, b, ev.get("event_type"), ev.get("confidence", "")))
+            label = ev.get("event_type")
+            # A group can provide context for a contract signed by a subsidiary.
+            if (label in {"partnership", "license_deal"}
+                    and entities[b].get("inclusion") == "stub"
+                    and "subsidiary" in (ev.get("summary", "") + " " + ev.get("note", "")).lower()):
+                label = _display("event", label) + " (group context)"
+            edges.add((a, b, label, ev.get("confidence", "")))
     asset_edges = set()
     for r in tables.get("asset_roles", []):
         if r.get("entity_id") in entities and r.get("asset_id") in asset_map and r.get("start", "") <= as_of.isoformat():
@@ -295,7 +301,7 @@ def render(tables, resolved, as_of, readme, root):
     aids = {aid: f"a{i}" for i, aid in enumerate(sorted({a for _, a, _, _ in asset_edges}))}
     def mermaid(value):
         return str(value).replace('"', "'").replace("\n", " ")
-    diagram = ["# Lineage", "", INDEX_NAV, "", "```mermaid", "flowchart LR"]
+    diagram = ["# Lineage", "", INDEX_NAV, "", "Group context edges point to a parent group; see the company timeline for the signing subsidiary.", "", "```mermaid", "flowchart LR"]
     for eid in sorted(nodes):
         entity = entities[eid]
         diagram.append(f'    {ids[eid]}["{mermaid(entity.get("name") or eid)}"]' + (":::stub" if entity.get("inclusion") == "stub" else ""))
@@ -303,7 +309,8 @@ def render(tables, resolved, as_of, readme, root):
         diagram.append(f'    {aids[aid]}["{mermaid(asset_map[aid].get("name") or aid)}"]:::asset')
     for a, b, label, confidence in sorted(edges):
         arrow = "-->" if confidence == "confirmed" else "-.->"
-        diagram.append(f'    {ids[a]} {arrow}|"{mermaid(_display("event", label))}"| {ids[b]}')
+        display = label if label.endswith(" (group context)") else _display("event", label)
+        diagram.append(f'    {ids[a]} {arrow}|"{mermaid(display)}"| {ids[b]}')
     for eid, aid, role, confidence in sorted(asset_edges):
         arrow = "-->" if confidence == "confirmed" else "-.->"
         diagram.append(f'    {ids[eid]} {arrow}|"{mermaid(_display("role", role))}"| {aids[aid]}')
@@ -314,7 +321,8 @@ def render(tables, resolved, as_of, readme, root):
     for ev in reversed(recent):
         if ev.get("entity_id") not in entities:
             continue
-        lines.append(f"- **{ev.get('date', '')}** {_anchor_link(ev['entity_id'], entities)} · {ev.get('confidence', '')}: {ev.get('summary', '')}")
+        note = f" — {ev['note']}" if ev.get("note") else ""
+        lines.append(f"- **{ev.get('date', '')}** {_anchor_link(ev['entity_id'], entities)} · {ev.get('confidence', '')}: {ev.get('summary', '')}{note}")
     if not recent:
         lines.append("No recent events.")
     out["index/changes.md"] = ("\n".join(lines).rstrip() + "\n").encode("utf-8")

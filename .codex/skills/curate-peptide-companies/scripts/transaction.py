@@ -20,7 +20,7 @@ from datetime import date
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from awepep_co.validation import HEADERS, PRIMARY_KEYS, validate  # noqa: E402
+from awepep_co.validation import HEADERS, PRIMARY_KEYS, evidence_identity_conflicts, validate  # noqa: E402
 
 MANIFEST = '.company-edit-snapshot.json'
 TABLES = tuple('data/' + name + '.csv' for name in HEADERS)
@@ -40,7 +40,7 @@ def _render_files(root):
         raise ValueError('symlink render input: README.md')
     if readme.is_file():
         result['README.md'] = readme.read_bytes()
-    for dirname in ('templates', 'cards', 'index', 'awepep_co'):
+    for dirname in ('templates', 'cards', 'index', 'awepep_co', 'docs', 'assets', 'history'):
         base = root / dirname
         if base.is_symlink():
             raise ValueError('symlink render directory: ' + dirname)
@@ -133,6 +133,14 @@ def _protected(before, after):
     by_id = {row['event_id']: row for row in new_events}
     if any(by_id.get(row['event_id']) != row for row in old_events):
         raise ValueError('existing events must not be deleted or modified')
+    # An immutable event still changes meaning if its cited evidence ID is
+    # redirected to a different source. Protect evidence used by *any* old
+    # structured fact, even if the candidate removes the association itself.
+    old_tables = {name: _csv_rows(before['data/' + name + '.csv'], name) for name in HEADERS}
+    new_tables = {name: _csv_rows(after['data/' + name + '.csv'], name) for name in HEADERS}
+    conflicts = evidence_identity_conflicts(old_tables, new_tables)
+    if conflicts:
+        raise ValueError('cannot remove or change source identity of referenced evidence: ' + ', '.join(conflicts))
     return new_ids
 
 

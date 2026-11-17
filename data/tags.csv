@@ -7,6 +7,7 @@ astrazeneca-molecular-ai,dry,property_prediction,github-molecularai-pepinvent
 astrazeneca-molecular-ai,dry,reinforcement_learning,github-molecularai-pepinvent
 astrazeneca-molecular-ai,modality,macrocyclic_peptide,github-molecularai-pepinvent
 bytedance-ai4s-team,dry,structure_prediction,github-bytedance-protenix
+peptway,modality,macrocyclic_peptide,peptway-about
 syneron-bio,modality,macrocyclic_peptide,prnewswire-20250321-syneron-astrazeneca
 syneron-bio,therapeutic_area,autoimmune,prnewswire-20250321-syneron-astrazeneca
 syneron-bio,therapeutic_area,metabolic,prnewswire-20250321-syneron-astrazeneca
