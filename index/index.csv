@@ -1,15 +1,29 @@
 entity_id,name,one_liner,entity_type,current_status,loop_level,peptide_relevance,country,last_verified
 ailsynbio,AilsynBio,Hong Kong AI-native biotechnology company focused on peptide therapeutics.,ai_native_biotech,active,Not assessed,core,HK,2026-11-17
+aimedorig,AIMEDORIG,AIMEDORIG describes an AI-driven peptide and protein drug discovery business.,ai_native_biotech,unknown,Not assessed,core,,2026-11-18
 anew-labs,Anew Labs,AI drug discovery company with peptide-related research and experimental programmes.,ai_native_biotech,active,Not assessed,infrastructure,CN,2026-11-17
 astrazeneca,AstraZeneca,"AstraZeneca describes peptide research supported by AI, including its PepINVENT system.",pharma_company,unknown,Not assessed,adjacent,,2026-11-17
 astrazeneca-molecular-ai,AstraZeneca Molecular AI,Molecular AI department of AstraZeneca R&D with open-source generative design tools including PepINVENT.,pharma_ai_team,active,Not assessed,adjacent,SE,2026-11-17
 bristol-myers-squibb,Bristol Myers Squibb,Bristol Myers Squibb collaborated with Menten AI on peptide research.,pharma_company,unknown,Not assessed,adjacent,,2026-11-17
 bytedance-ai4s-team,ByteDance AI4S team,AI for Science team at ByteDance that developed the Protenix structure prediction model.,bigtech_ai_team,active,Not assessed,infrastructure,,2026-11-17
+cspc-pharma,CSPC Pharmaceutical Group,CSPC disclosed a peptide research and licensing agreement with AstraZeneca using a CSPC group AI platform.,pharma_company,active,Not assessed,adjacent,CN,2026-11-18
 eli-lilly,Eli Lilly and Company,"Eli Lilly develops peptide medicines, including tirzepatide.",pharma_company,unknown,Not assessed,adjacent,,2026-11-17
-gan-and-lee,Gan & Lee Pharmaceuticals,Gan & Lee announced a peptide research collaboration using XtalPi’s AI platform.,pharma_company,unknown,Not assessed,adjacent,,2026-11-17
+gan-and-lee,Gan & Lee Pharmaceuticals,Gan & Lee announced a peptide research collaboration using XtalPi’s AI platform.,pharma_company,unknown,Not assessed,adjacent,,2026-11-18
 gilead-sciences,Gilead Sciences,"Gilead announced an agreement to acquire an investigational peptide program, subject to closing.",pharma_company,unknown,Not assessed,adjacent,,2026-11-17
-hansoh-pharma,Hansoh Pharmaceutical Group,A Hansoh subsidiary licensed AilsynBio’s AI platform for peptide discovery.,pharma_company,unknown,Not assessed,adjacent,,2026-11-17
+hansoh-pharma,Hansoh Pharmaceutical Group,A Hansoh subsidiary licensed AilsynBio’s AI platform for peptide discovery.,pharma_company,unknown,Not assessed,adjacent,,2026-11-18
+hengrui-pharma,Jiangsu Hengrui Pharmaceuticals,Hengrui reports applying AI to peptide design within its drug research operations.,pharma_company,unknown,Not assessed,adjacent,CN,2026-11-18
+hitgen,HitGen,HitGen reports using AI in discovery work involving cyclic peptide-like compounds.,platform_vendor,unknown,Not assessed,infrastructure,CN,2026-11-18
+huadong-medicine,Huadong Medicine,Huadong Medicine reports AI-assisted drug discovery supporting research projects that include peptides.,pharma_company,unknown,Not assessed,adjacent,CN,2026-11-18
+hybio-pharmaceutical,Hybio Pharmaceutical,"Hybio and 碳云智肽 are collaborating on peptide drug development, with Hybio responsible for development.",pharma_company,active,Not assessed,core,CN,2026-11-18
+ligit,LigIT,LigIT’s financing adviser describes a company focused on AI-enabled peptide drug discovery.,ai_native_biotech,unknown,Not assessed,core,,2026-11-18
 novartis,Novartis,Novartis and Unnatural Products announced an AI-enabled peptide research collaboration.,pharma_company,unknown,Not assessed,adjacent,,2026-11-17
 novo-nordisk,Novo Nordisk,Novo Nordisk reports peptide-focused research and medicines.,pharma_company,unknown,Not assessed,adjacent,,2026-11-17
+pepstar-therapeutics,PepStar Therapeutics Limited,Gilead identifies PepStar Therapeutics as the original developer of a Phase I peptide candidate.,peptide_therapeutics,unknown,Not assessed,core,,2026-11-18
+peptiorigin,PeptiOrigin,PeptiOrigin signed a joint AI peptide research lab agreement with HKUST (Guangzhou).,ai_native_biotech,unknown,Not assessed,core,,2026-11-18
 peptway,Peptway,Hangzhou biotechnology company reporting AI-enabled peptide research.,ai_native_biotech,active,Not assessed,core,CN,2026-11-17
+ql-biopharm,Beijing QL Biopharmaceutical,"QL Biopharm reports clinical-stage peptide programs, including a Phase III study.",peptide_therapeutics,unknown,Not assessed,core,CN,2026-11-18
+shanghai-pharmaceuticals,Shanghai Pharmaceuticals Holding,Shanghai Pharmaceuticals reports applying an AI platform to cyclic peptide discovery.,pharma_company,unknown,Not assessed,adjacent,CN,2026-11-18
 syneron-bio,Syneron Bio,Macrocyclic peptide company with the Synova platform and an AstraZeneca collaboration.,ai_native_biotech,active,Not assessed,core,CN,2026-11-17
+tanyun-zhitai,碳云智肽,碳云智肽 contributes AI to a joint peptide program with Hybio Pharmaceutical.,ai_native_biotech,unknown,Not assessed,core,,2026-11-18
+viva-biotech,Viva Biotech,Viva Biotech reports an AI-enabled peptide drug discovery service.,platform_vendor,unknown,Not assessed,infrastructure,CN,2026-11-18
+xtalpi,XtalPi Holdings,XtalPi provides an AI peptide discovery platform and reports a research and licensing agreement with Gan & Lee.,platform_vendor,active,Not assessed,infrastructure,CN,2026-11-18

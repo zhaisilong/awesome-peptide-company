@@ -16,9 +16,9 @@ Explore biotech companies, pharmaceutical AI teams, technology-company research 
 
 ## Explore
 
-- **Organizations:** [By scope](index/by-scope.md) · [By type](index/by-type.md) · [By status](index/by-status.md) · [By region](index/by-region.md)
+- **Organizations:** [By name](index/by-name.md) · [By scope](index/by-scope.md) · [By type](index/by-type.md) · [By status](index/by-status.md) · [By region](index/by-region.md)
 - **Research:** [By peptide modality](index/by-modality.md) · [By dry–wet loop](index/by-loop-level.md) · [Assets](index/assets.md)
-- **Overview:** [Pharmaceutical company survey](docs/pharma-survey.md)
+- **Overviews:** [Pharmaceutical companies](docs/pharma-survey.md) · [China company survey](docs/china-company-survey.md)
 - **Relationships:** [Lineage](index/lineage.md) · [Recent changes](index/changes.md)
 - **Data:** [CSV](index/index.csv) · [JSON](index/index.json) · [Source tables](data/)
 
@@ -30,11 +30,15 @@ Each entry links to a profile with its evidence, assets, and timeline. Status an
 
 ### AI–peptide work
 
-- **[AilsynBio](cards/ailsynbio/README.md)**<br>
+- **[AilsynBio (昂心生物)](cards/ailsynbio/README.md)**<br>
   Hong Kong AI-native biotechnology company focused on peptide therapeutics.<br>
   AI-native biotech · Active · Core relevance · HK
 
-- **[Anew Labs](cards/anew-labs/README.md)**<br>
+- **[AIMEDORIG (智药元创)](cards/aimedorig/README.md)**<br>
+  AIMEDORIG describes an AI-driven peptide and protein drug discovery business.<br>
+  AI-native biotech · Not assessed · Core relevance
+
+- **[Anew Labs (新生实验室)](cards/anew-labs/README.md)**<br>
   AI drug discovery company with peptide-related research and experimental programmes.<br>
   AI-native biotech · Active · Infrastructure relevance · CN
 
@@ -50,25 +54,69 @@ Each entry links to a profile with its evidence, assets, and timeline. Status an
   Bristol Myers Squibb collaborated with Menten AI on peptide research.<br>
   Pharmaceutical company · Not assessed · Adjacent relevance
 
-- **[Gan & Lee Pharmaceuticals](cards/gan-and-lee/README.md)**<br>
+- **[CSPC Pharmaceutical Group (石药集团)](cards/cspc-pharma/README.md)**<br>
+  CSPC disclosed a peptide research and licensing agreement with AstraZeneca using a CSPC group AI platform.<br>
+  Pharmaceutical company · Active · Adjacent relevance · CN
+
+- **[Gan & Lee Pharmaceuticals (甘李药业)](cards/gan-and-lee/README.md)**<br>
   Gan & Lee announced a peptide research collaboration using XtalPi’s AI platform.<br>
   Pharmaceutical company · Not assessed · Adjacent relevance
 
-- **[Hansoh Pharmaceutical Group](cards/hansoh-pharma/README.md)**<br>
+- **[Hansoh Pharmaceutical Group (翰森制药)](cards/hansoh-pharma/README.md)**<br>
   A Hansoh subsidiary licensed AilsynBio’s AI platform for peptide discovery.<br>
   Pharmaceutical company · Not assessed · Adjacent relevance
+
+- **[Jiangsu Hengrui Pharmaceuticals (恒瑞医药)](cards/hengrui-pharma/README.md)**<br>
+  Hengrui reports applying AI to peptide design within its drug research operations.<br>
+  Pharmaceutical company · Not assessed · Adjacent relevance · CN
+
+- **[HitGen (成都先导)](cards/hitgen/README.md)**<br>
+  HitGen reports using AI in discovery work involving cyclic peptide-like compounds.<br>
+  Platform vendor · Not assessed · Infrastructure relevance · CN
+
+- **[Huadong Medicine (华东医药)](cards/huadong-medicine/README.md)**<br>
+  Huadong Medicine reports AI-assisted drug discovery supporting research projects that include peptides.<br>
+  Pharmaceutical company · Not assessed · Adjacent relevance · CN
+
+- **[Hybio Pharmaceutical (翰宇药业)](cards/hybio-pharmaceutical/README.md)**<br>
+  Hybio and 碳云智肽 are collaborating on peptide drug development, with Hybio responsible for development.<br>
+  Pharmaceutical company · Active · Core relevance · CN
+
+- **[LigIT (利太智药)](cards/ligit/README.md)**<br>
+  LigIT’s financing adviser describes a company focused on AI-enabled peptide drug discovery.<br>
+  AI-native biotech · Not assessed · Core relevance
 
 - **[Novartis](cards/novartis/README.md)**<br>
   Novartis and Unnatural Products announced an AI-enabled peptide research collaboration.<br>
   Pharmaceutical company · Not assessed · Adjacent relevance
 
-- **[Peptway](cards/peptway/README.md)**<br>
+- **[PeptiOrigin (肽盛生物)](cards/peptiorigin/README.md)**<br>
+  PeptiOrigin signed a joint AI peptide research lab agreement with HKUST (Guangzhou).<br>
+  AI-native biotech · Not assessed · Core relevance
+
+- **[Peptway (肽为生物)](cards/peptway/README.md)**<br>
   Hangzhou biotechnology company reporting AI-enabled peptide research.<br>
   AI-native biotech · Active · Core relevance · CN
 
-- **[Syneron Bio](cards/syneron-bio/README.md)**<br>
+- **[Shanghai Pharmaceuticals Holding (上海医药)](cards/shanghai-pharmaceuticals/README.md)**<br>
+  Shanghai Pharmaceuticals reports applying an AI platform to cyclic peptide discovery.<br>
+  Pharmaceutical company · Not assessed · Adjacent relevance · CN
+
+- **[Syneron Bio (元思生肽)](cards/syneron-bio/README.md)**<br>
   Macrocyclic peptide company with the Synova platform and an AstraZeneca collaboration.<br>
   AI-native biotech · Active · Core relevance · CN
+
+- **[碳云智肽](cards/tanyun-zhitai/README.md)**<br>
+  碳云智肽 contributes AI to a joint peptide program with Hybio Pharmaceutical.<br>
+  AI-native biotech · Not assessed · Core relevance
+
+- **[Viva Biotech (维亚生物)](cards/viva-biotech/README.md)**<br>
+  Viva Biotech reports an AI-enabled peptide drug discovery service.<br>
+  Platform vendor · Not assessed · Infrastructure relevance · CN
+
+- **[XtalPi Holdings (晶泰科技)](cards/xtalpi/README.md)**<br>
+  XtalPi provides an AI peptide discovery platform and reports a research and licensing agreement with Gan & Lee.<br>
+  Platform vendor · Active · Infrastructure relevance · CN
 
 ### Peptide landscape · AI link unverified
 
@@ -83,6 +131,14 @@ Each entry links to a profile with its evidence, assets, and timeline. Status an
 - **[Novo Nordisk](cards/novo-nordisk/README.md)**<br>
   Novo Nordisk reports peptide-focused research and medicines.<br>
   Pharmaceutical company · Not assessed · Adjacent relevance
+
+- **[PepStar Therapeutics Limited (瀚辰星泰)](cards/pepstar-therapeutics/README.md)**<br>
+  Gilead identifies PepStar Therapeutics as the original developer of a Phase I peptide candidate.<br>
+  Peptide therapeutics · Not assessed · Core relevance
+
+- **[Beijing QL Biopharmaceutical (质肽生物)](cards/ql-biopharm/README.md)**<br>
+  QL Biopharm reports clinical-stage peptide programs, including a Phase III study.<br>
+  Peptide therapeutics · Not assessed · Core relevance · CN
 
 ### Scope pending review
 

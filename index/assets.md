@@ -1,6 +1,6 @@
 # Assets
 
-[← Home](../README.md) · [Scope](by-scope.md) · [Types](by-type.md) · [Status](by-status.md) · [Modalities](by-modality.md)
+[← Home](../README.md) · [Names](by-name.md) · [Scope](by-scope.md) · [Types](by-type.md) · [Status](by-status.md) · [Modalities](by-modality.md)
 
 ## [AnewDDE](https://anewbt.com/)
 

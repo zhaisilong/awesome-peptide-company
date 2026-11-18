@@ -1,0 +1,3 @@
+The company's [Series B announcement](https://www.prnewswire.com/news-releases/syneron-bio-announces-completion-of-150-million-series-b-financing-302733591.html) lists a company website, but that site could not be independently opened during this review. Headquarters and founding date remain unconfirmed; the announcement mentions a Beijing research center, which does not establish headquarters.
+
+In a [2026 interview](https://www.cls.cn/detail/2373614), Syneron described its own use of AI in peptide research. This is a company statement reported by a media outlet, not an independent validation or a basis for assigning a loop level.

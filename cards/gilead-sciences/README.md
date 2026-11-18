@@ -1,6 +1,6 @@
 # Gilead Sciences
 
-[← Home](../../README.md) · [By scope](../../index/by-scope.md) · [Browse by type](../../index/by-type.md) · [By status](../../index/by-status.md) · [By modality](../../index/by-modality.md)
+[← Home](../../README.md) · [By name](../../index/by-name.md) · [By scope](../../index/by-scope.md) · [Browse by type](../../index/by-type.md) · [By status](../../index/by-status.md) · [By modality](../../index/by-modality.md)
 
 Gilead announced an agreement to acquire an investigational peptide program, subject to closing.
 

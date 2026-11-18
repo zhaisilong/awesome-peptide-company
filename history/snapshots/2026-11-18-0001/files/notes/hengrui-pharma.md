@@ -1,0 +1,1 @@
+The interim report describes AI use in peptide design at company level. It does not identify which peptide programs used it. [Interim report](https://static.cninfo.com.cn/finalpage/2026-08-20/1225483600.PDF)

@@ -1,6 +1,6 @@
-# Hansoh Pharmaceutical Group
+# Hansoh Pharmaceutical Group (翰森制药)
 
-[← Home](../../README.md) · [By scope](../../index/by-scope.md) · [Browse by type](../../index/by-type.md) · [By status](../../index/by-status.md) · [By modality](../../index/by-modality.md)
+[← Home](../../README.md) · [By name](../../index/by-name.md) · [By scope](../../index/by-scope.md) · [Browse by type](../../index/by-type.md) · [By status](../../index/by-status.md) · [By modality](../../index/by-modality.md)
 
 A Hansoh subsidiary licensed AilsynBio’s AI platform for peptide discovery.
 
@@ -15,8 +15,8 @@ A Hansoh subsidiary licensed AilsynBio’s AI platform for peptide discovery.
 | Headquarters | — |
 | Parent | — |
 | Website | — |
-| Aliases | — |
-| Last verified | 2026-11-17 |
+| Aliases | 翰森制药 |
+| Last verified | 2026-11-18 |
 
 
 ## Peptide relevance and tags
@@ -46,6 +46,7 @@ No papers linked.
 
 ## Sources
 
+- **A** [與昂心生物訂立合作開發協議](https://www1.hkexnews.hk/listedco/listconews/sehk/2026/1113/2026111300948_c.pdf) · Hansoh Pharmaceutical Group via HKEX · accessed 2026-11-18
 - **A** [Collaboration development agreement with AilsynBio](https://www1.hkexnews.hk/listedco/listconews/sehk/2026/1113/2026111300947.pdf) · Hansoh Pharmaceutical Group via HKEX · accessed 2026-11-17
 
 ## Curator notes

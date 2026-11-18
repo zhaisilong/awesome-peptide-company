@@ -1,0 +1,1 @@
+[Hansoh's HKEX announcement](https://www1.hkexnews.hk/listedco/listconews/sehk/2026/1113/2026111300947.pdf) says its wholly owned Hansoh (Shanghai) Healthtech subsidiary entered an agreement with AilsynBio for the use of AilsynBio's AI platform in peptide discovery. The source identifies the subsidiary as the signatory; the platform is AilsynBio's.

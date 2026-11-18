@@ -1,0 +1,28 @@
+entity_id,alias,lang,kind,valid_from,valid_to,evidence_ids
+ailsynbio,AilsynBio Limited,en,variant,,,hkcr-20251208-ailsynbio-registration
+ailsynbio,昂心生物,zh,preferred_zh,,,hkex-20261113-hansoh-ailsynbio
+ailsynbio,昂心生物有限公司,zh,zh_name,2026-04-10,,hkcr-20260413-ailsynbio-name
+aimedorig,智药元创,zh,preferred_zh,,,aimedorig-company
+anew-labs,Anew Therapeutics,en,variant,,,scmp-20260502-bytedance-drug-unit
+anew-labs,ByteDance AI Drug Discovery,en,variant,,,scmp-20260502-bytedance-drug-unit
+anew-labs,新生实验室,zh,preferred_zh,,,anew-labs-website
+astrazeneca-molecular-ai,MolecularAI,en,variant,,,github-molecularai-org
+bytedance-ai4s-team,ByteDance AML AI4Science Team,en,variant,,,github-bytedance-protenix
+cspc-pharma,石药集团,zh,preferred_zh,,,astrazeneca-cn-20260130-cspc-peptides
+gan-and-lee,甘李药业,zh,preferred_zh,,,xtalpi-20251209-ganlee-zh
+hansoh-pharma,翰森制药,zh,preferred_zh,,,hansoh-20261113-chinese-agreement
+hengrui-pharma,恒瑞医药,zh,preferred_zh,,,hengrui-2026-interim
+hitgen,成都先导,zh,preferred_zh,,,hitgen-2026-interim
+huadong-medicine,华东医药,zh,preferred_zh,,,huadong-2025-annual
+hybio-pharmaceutical,翰宇药业,zh,preferred_zh,,,hybio-2026-interim
+ligit,利太智药,zh,preferred_zh,,,lighthouse-20261010-ligit
+pepstar-therapeutics,瀚辰星泰,zh,preferred_zh,,,longriver-20261023-pepstar-name
+peptiorigin,肽盛生物,zh,preferred_zh,,,hkustgz-20260518-peptiorigin
+peptway,杭州肽为生物科技有限公司,zh,zh_name,,,peptway-20261105-forum
+peptway,肽为生物,zh,preferred_zh,,,peptway-about
+ql-biopharm,质肽生物,zh,preferred_zh,,,ql-biopharm-company
+shanghai-pharmaceuticals,上海医药,zh,preferred_zh,,,shanghai-pharma-2025-annual
+syneron-bio,元思生肽,zh,preferred_zh,,,sina-20251211-syneron-series-a
+tanyun-zhitai,深圳碳云智肽药物科技有限公司,zh,zh_name,,,hybio-20260911-tanyun-peptide
+viva-biotech,维亚生物,zh,preferred_zh,,,viva-20260826-interim-news
+xtalpi,晶泰科技,zh,preferred_zh,,,xtalpi-pepix

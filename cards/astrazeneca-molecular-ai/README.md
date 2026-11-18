@@ -1,6 +1,6 @@
 # AstraZeneca Molecular AI
 
-[← Home](../../README.md) · [By scope](../../index/by-scope.md) · [Browse by type](../../index/by-type.md) · [By status](../../index/by-status.md) · [By modality](../../index/by-modality.md)
+[← Home](../../README.md) · [By name](../../index/by-name.md) · [By scope](../../index/by-scope.md) · [Browse by type](../../index/by-type.md) · [By status](../../index/by-status.md) · [By modality](../../index/by-modality.md)
 
 Molecular AI department of AstraZeneca R&D with open-source generative design tools including PepINVENT.
 
@@ -49,6 +49,7 @@ These are parent-level relationships and do not imply participation by this team
 
 - 2025-03-21: AstraZeneca gets access to Synova; USD 75M upfront and near-term plus up to USD 3.4B in milestones; royalties and an equity investment. (confirmed)
 - 2025-12-11: Series A and A+ financing raised close to USD 100M; AstraZeneca participated. (confirmed)
+- 2026-01-30: CSPC announced a peptide research and licensing agreement with AstraZeneca involving its own AI peptide platform. (confirmed)
 
 </details>
 

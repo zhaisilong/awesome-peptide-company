@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.3
+
+- Add 14 company profiles from a survey of China's peptide sector, including two clinical-stage biotech companies in the peptide landscape.
+- Show sourced Chinese names in directory navigation and add bilingual lookup by company name, alias, or ID.
+- Prepare complete isolated previews for batch curation in a single command.
+
 ## 0.3.2
 
 - Survey pharmaceutical organizations and distinguish evidence of AI-related peptide work from peptide activities with an unconfirmed AI connection.

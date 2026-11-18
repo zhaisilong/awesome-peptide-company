@@ -15,9 +15,13 @@ For Codex-assisted work on a specified organization, the repo-local [`$curate-pe
 
 ## Adding records
 
+Before adding an organization, use `awepep-co lookup '质肽生物'` with its known names or ID. Lookup includes relationship stubs and searches the current source tables. An explicit `--as-of YYYY-MM-DD` selects the historical snapshot for that date. Exact normalized matches take precedence over substring matches. Review all matches before deciding whether a record is new.
+
 Edit the source CSVs, or use `awepep-co add` with repeated `--field name=value` arguments for an `entity`, `event`, `evidence`, or `asset`. Field names and required values are defined by `schema/tables.json` and the controlled vocabulary in `vocab/`. For example, use `awepep-co add evidence --field evidence_id=... --field url=...` with the remaining required fields. All values must describe verified sources or conservatively identified reports. The command validates the resulting dataset, checks keys and references, and writes a sorted CSV only if validation succeeds. It does not generate pages.
 
 ## Review and generation
+
+Use the curation transaction for changes that span multiple tables, such as adding a company together with its required scope and evidence tags. Run the skill's `prepare --with-preview` command to create a self-contained preview workspace and inspect its generated output before applying changes.
 
 After changing knowledge inputs, record a new snapshot with the actual current date before validating or generating pages. Review the snapshot alongside the source changes; see [historical snapshots](docs/history.md) for scope and historical builds.
 

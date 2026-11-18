@@ -9,7 +9,7 @@ import sys
 from datetime import date
 from pathlib import Path
 
-from . import history, render, resolve, validation
+from . import history, names, render, resolve, validation
 
 
 def _date(value):
@@ -167,6 +167,10 @@ def main(argv=None):
     links = sub.add_parser("check-links", help="Check evidence URLs without changing records")
     links.add_argument("--timeout", type=_timeout, default=10.0, help="Timeout per request in seconds")
     links.add_argument("--root", type=Path, default=Path.cwd(), help=argparse.SUPPRESS)
+    lookup = sub.add_parser("lookup", help="Find organizations by ID, name, or alias")
+    lookup.add_argument("term", metavar="TERM")
+    lookup.add_argument("--as-of", type=_date, help="Search the knowledge snapshot for this date")
+    lookup.add_argument("--root", type=Path, default=Path.cwd(), help=argparse.SUPPRESS)
     stale = sub.add_parser("stale", help="Report stale or unverified entities")
     stale.add_argument("--days", type=_nonnegative_int, default=365)
     stale.add_argument("--as-of", type=_date, default=date.today())
@@ -199,6 +203,20 @@ def main(argv=None):
                 print("{} | {} | {} | {} | {}".format(result.status.upper(), result.evidence_id, result.field, result.url, result.detail))
             print("Checked {} links; {} broken, {} unknown.".format(len(results), sum(r.status == "broken" for r in results), sum(r.status == "unknown" for r in results)))
             return int(any(r.status == "broken" for r in results))
+        if args.command == "lookup":
+            root = args.root.resolve()
+            source = root
+            if args.as_of:
+                if not history._snapshot_dirs(root):
+                    raise ValueError("historical lookup requires a recorded knowledge snapshot")
+                source = history.select(root, args.as_of)
+            tables = validation.load_tables(source, ("entities", "aliases"))
+            matches = names.lookup(tables, args.term, args.as_of or date.today())
+            for eid, name, inclusion in matches:
+                print(f"{eid} | {name} | {inclusion}")
+            if not matches:
+                print("No matching organizations.")
+            return 0
         if args.command == "stale":
             from .stale import stale_report
             issues = validation.validate(args.root.resolve(), as_of=args.as_of)

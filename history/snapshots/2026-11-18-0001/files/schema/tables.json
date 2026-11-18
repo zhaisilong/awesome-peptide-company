@@ -1,0 +1,145 @@
+{
+  "entities": {
+    "columns": [
+      "entity_id",
+      "name",
+      "entity_type",
+      "inclusion",
+      "parent_id",
+      "peptide_relevance",
+      "relevance_evidence_ids",
+      "country",
+      "hq_city",
+      "website",
+      "one_liner"
+    ],
+    "primary_key": [
+      "entity_id"
+    ]
+  },
+  "aliases": {
+    "columns": [
+      "entity_id",
+      "alias",
+      "lang",
+      "kind",
+      "valid_from",
+      "valid_to",
+      "evidence_ids"
+    ],
+    "primary_key": [
+      "entity_id",
+      "alias"
+    ]
+  },
+  "events": {
+    "columns": [
+      "event_id",
+      "entity_id",
+      "date",
+      "date_precision",
+      "event_type",
+      "related_entity_id",
+      "asset_id",
+      "value",
+      "unit",
+      "summary",
+      "confidence",
+      "evidence_ids",
+      "note"
+    ],
+    "primary_key": [
+      "event_id"
+    ]
+  },
+  "evidence": {
+    "columns": [
+      "evidence_id",
+      "url",
+      "archive_url",
+      "title",
+      "publisher",
+      "source_type",
+      "tier",
+      "origin_key",
+      "published",
+      "accessed",
+      "language"
+    ],
+    "primary_key": [
+      "evidence_id"
+    ]
+  },
+  "assets": {
+    "columns": [
+      "asset_id",
+      "name",
+      "asset_type",
+      "url",
+      "license",
+      "first_public_date",
+      "description"
+    ],
+    "primary_key": [
+      "asset_id"
+    ]
+  },
+  "asset_roles": {
+    "columns": [
+      "asset_id",
+      "entity_id",
+      "role",
+      "start",
+      "end",
+      "confidence",
+      "evidence_ids"
+    ],
+    "primary_key": [
+      "asset_id",
+      "entity_id",
+      "role",
+      "start"
+    ]
+  },
+  "tags": {
+    "columns": [
+      "entity_id",
+      "facet",
+      "value",
+      "evidence_ids"
+    ],
+    "primary_key": [
+      "entity_id",
+      "facet",
+      "value"
+    ]
+  },
+  "loop_assessments": {
+    "columns": [
+      "entity_id",
+      "as_of",
+      "level",
+      "evidence_level",
+      "review_status",
+      "rationale",
+      "evidence_ids"
+    ],
+    "primary_key": [
+      "entity_id",
+      "as_of"
+    ]
+  },
+  "paper_links": {
+    "columns": [
+      "subject_id",
+      "subject_kind",
+      "doi",
+      "awepep_id",
+      "relation"
+    ],
+    "primary_key": [
+      "subject_id",
+      "doi"
+    ]
+  }
+}

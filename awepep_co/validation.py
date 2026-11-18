@@ -12,6 +12,8 @@ from datetime import date, datetime
 from pathlib import Path
 from urllib.parse import urlparse
 
+from .resolve import interval_bounds
+
 
 @dataclass(frozen=True)
 class Issue:
@@ -30,13 +32,27 @@ PRIMARY_KEYS = {name: spec['primary_key'] for name, spec in _SCHEMA.items()}
 EVIDENCE_IDENTITY_FIELDS = ('url', 'tier', 'origin_key', 'source_type')
 
 
-def load_tables(root):
-    """Read all source tables. Validation should be run before consuming the result."""
-    result = {}
-    for table in HEADERS:
-        with (Path(root) / 'data' / (table + '.csv')).open(encoding='utf-8', newline='') as f:
-            result[table] = list(csv.DictReader(f, strict=True))
-    return result
+def _read_table(root, table):
+    with (Path(root) / 'data' / (table + '.csv')).open(encoding='utf-8', newline='') as stream:
+        reader = csv.DictReader(stream, strict=True)
+        columns = HEADERS[table]
+        if reader.fieldnames != columns:
+            raise ValueError(f'expected header {columns}, got {reader.fieldnames}')
+        rows = list(reader)
+        if any(None in row or any(value is None for value in row.values()) for row in rows):
+            raise ValueError('malformed row width')
+        return rows
+
+
+def load_tables(root, table_names=HEADERS):
+    """Read source tables and check their CSV structure."""
+    tables = {}
+    for table in table_names:
+        try:
+            tables[table] = _read_table(root, table)
+        except (csv.Error, ValueError) as exc:
+            raise ValueError(f'{table}.csv: {exc}') from exc
+    return tables
 
 
 def _datestr(value):
@@ -119,20 +135,10 @@ def validate(root, as_of=None, base_ref=None):
     except (OSError, ValueError, csv.Error) as exc:
         return [Issue('E02', f'cannot read vocabulary: {exc}')]
     tables = {}
-    for table, columns in HEADERS.items():
-        path = root / 'data' / (table + '.csv')
+    for table in HEADERS:
         try:
-            with path.open(encoding='utf-8', newline='') as f:
-                reader = csv.DictReader(f, strict=True)
-                if reader.fieldnames != columns:
-                    add('E01', f'{table}.csv: expected header {columns}, got {reader.fieldnames}')
-                    continue
-                rows = list(reader)
-                if any(None in row or any(v is None for v in row.values()) for row in rows):
-                    add('E01', f'{table}.csv: malformed row width')
-                    continue
-                tables[table] = rows
-        except (OSError, UnicodeError, csv.Error) as exc:
+            tables[table] = _read_table(root, table)
+        except (OSError, csv.Error, ValueError) as exc:
             add('E01', f'{table}.csv: {exc}')
     if len(tables) != len(HEADERS):
         return issues
@@ -246,16 +252,54 @@ def validate(root, as_of=None, base_ref=None):
                 add('E10', f'{loc}: relevance evidence required')
             if table == 'loop_assessments' and row['review_status'] == 'proposed' and _datestr(row['as_of']) and (today - _datestr(row['as_of'])).days > 30:
                 add('W05', f'{loc}: proposed assessment is over 30 days old', 'warning')
+    windows = {}
+    for row in tables['aliases']:
+        if row['kind'] != 'preferred_zh':
+            continue
+        eid = row['entity_id']
+        if row['lang'].lower().split('-', 1)[0] != 'zh':
+            add('E02', f'entity {eid}: preferred_zh alias requires Chinese language (zh)')
+        start, end = row['valid_from'], row['valid_to']
+        if (start and _datestr(start) is None) or (end and _datestr(end) is None):
+            continue  # The row already has a date error.
+        lower, upper = interval_bounds(start, end)
+        if lower > upper:
+            add('E12', f'entity {eid}: preferred_zh alias has no effective dates')
+            continue
+        windows.setdefault(eid, []).append((lower, upper))
+    for eid, intervals in sorted(windows.items()):
+        ordered = sorted(intervals)
+        if any(previous[1] >= current[0] for previous, current in zip(ordered, ordered[1:])):
+            add('E12', f'entity {eid}: overlapping preferred_zh aliases')
+
     scope_counts = {}
+    landscape_entities = set()
+    clinical_landscape = set()
     for row in tables['tags']:
+        eid = row['entity_id']
         if row['facet'] == 'directory_scope':
-            scope_counts[row['entity_id']] = scope_counts.get(row['entity_id'], 0) + 1
+            scope_counts[eid] = scope_counts.get(eid, 0) + 1
+            if row['value'] == 'peptide_landscape':
+                landscape_entities.add(eid)
+        if row['facet'] == 'stage_max' and row['value'] in {'phase1', 'phase2', 'phase3', 'approved'}:
+            refs = (evidence[source_id] for source_id in _values(row['evidence_ids']) if source_id in evidence)
+            if any(source['tier'] == 'A' and source['accessed'] for source in refs):
+                clinical_landscape.add(eid)
     for entity in tables['entities']:
         eid = entity['entity_id']
         if scope_counts.get(eid, 0) > 1:
             add('E12', f'entity {eid}: multiple directory scope values')
-        if entity['inclusion'] == 'full' and entity['entity_type'] == 'pharma_company' and not scope_counts.get(eid):
+        if entity['inclusion'] != 'full':
+            continue
+        kind = entity['entity_type']
+        if kind == 'pharma_company' and not scope_counts.get(eid):
             add('E10', f'entity {eid}: pharmaceutical company requires a directory scope with evidence')
+        if eid not in landscape_entities:
+            continue
+        if kind not in {'pharma_company', 'peptide_therapeutics'}:
+            add('E10', f'entity {eid}: peptide landscape scope requires pharma_company or peptide_therapeutics type')
+        elif kind == 'peptide_therapeutics' and eid not in clinical_landscape:
+            add('E10', f'entity {eid}: peptide landscape entry requires clinical-stage evidence from an accessed A-tier source')
     # Use the same resolver as rendering; skip W03 if invalid data would be resolved.
     if not any(issue.severity == 'error' for issue in issues):
         from .resolve import resolve

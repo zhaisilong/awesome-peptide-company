@@ -59,6 +59,7 @@ date_precision,year
 date_precision,month
 date_precision,day
 alias_kind,zh_name
+alias_kind,preferred_zh
 alias_kind,variant
 alias_kind,former_name
 alias_kind,abbreviation

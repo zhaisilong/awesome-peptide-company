@@ -1,0 +1,1 @@
+The company describes AI work in peptide and protein drug discovery. The entry uses the public AIMEDORIG brand and leaves the incorporation date unrecorded. [Company overview](https://www.aimedorig.com/index.php?c=category&id=7)

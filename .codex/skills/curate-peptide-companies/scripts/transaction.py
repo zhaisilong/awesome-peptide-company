@@ -32,27 +32,37 @@ def _digest(content):
     return hashlib.sha256(content).hexdigest()
 
 
-def _render_files(root):
+def _render_files(root, *, with_preview=False):
     """Snapshot user-editable render inputs and generated targets."""
     result = {}
-    readme = root / 'README.md'
-    if readme.is_symlink():
-        raise ValueError('symlink render input: README.md')
-    if readme.is_file():
-        result['README.md'] = readme.read_bytes()
-    for dirname in ('templates', 'cards', 'index', 'awepep_co', 'docs', 'assets', 'history'):
+    names = ('README.md',)
+    directories = ('templates', 'cards', 'index', 'awepep_co', 'docs', 'assets', 'history')
+    skill_dir = '.codex/skills/curate-peptide-companies'
+    if with_preview:
+        names += ('CONTRIBUTING.md', 'LICENSE', 'pyproject.toml')
+        directories += ('tests', skill_dir)
+    for name in names:
+        path = root / name
+        if path.is_symlink():
+            raise ValueError('symlink render input: ' + name)
+        if path.is_file():
+            result[name] = path.read_bytes()
+    for dirname in directories:
         base = root / dirname
-        if base.is_symlink():
+        if base.is_symlink() or any(parent.is_symlink() for parent in base.parents if root in parent.parents):
             raise ValueError('symlink render directory: ' + dirname)
         if not base.exists():
             continue
         if not base.is_dir():
             raise ValueError('not a render directory: ' + dirname)
         for path in sorted(base.rglob('*')):
+            relative = path.relative_to(root)
+            if dirname in {'tests', skill_dir} and ('__pycache__' in relative.parts or path.suffix in {'.pyc', '.pyo'}):
+                continue
             if path.is_symlink():
-                raise ValueError('symlink render input: ' + str(path.relative_to(root)))
+                raise ValueError('symlink render input: ' + str(relative))
             if path.is_file() and (dirname != 'awepep_co' or path.suffix in ('.py', '.json')):
-                result[path.relative_to(root).as_posix()] = path.read_bytes()
+                result[relative.as_posix()] = path.read_bytes()
     return result
 
 
@@ -90,7 +100,7 @@ def _paths(root, workspace):
     return root, workspace
 
 
-def prepare(root, workspace):
+def prepare(root, workspace, *, with_preview=False):
     root, workspace = _paths(root, workspace)
     snapshot = _files(root)
     for name in TABLES + ('.build-date', 'awepep_co/tables.json'):
@@ -98,13 +108,22 @@ def prepare(root, workspace):
             raise ValueError('missing source file: ' + name)
     if not (root / 'vocab').is_dir():
         raise ValueError('missing vocab directory')
+    render_files = _render_files(root, with_preview=with_preview)
+    contents = {**render_files, **snapshot} if with_preview else snapshot
     workspace.mkdir(parents=True, exist_ok=False)
     try:
-        for name, content in snapshot.items():
+        for name, content in contents.items():
             path = workspace / name
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_bytes(content)
-        manifest = {'root': str(root), 'files': _hashes(snapshot), 'render_files': _hashes(_render_files(root))}
+        if _files(root) != snapshot or _render_files(root, with_preview=with_preview) != render_files:
+            raise ValueError('project inputs or outputs changed during prepare; retry')
+        manifest = {
+            'root': str(root),
+            'files': _hashes(snapshot),
+            'render_files': _hashes(render_files),
+            'with_preview': with_preview,
+        }
         (workspace / MANIFEST).write_text(json.dumps(manifest, indent=2, sort_keys=True) + '\n', encoding='utf-8')
     except BaseException:
         shutil.rmtree(workspace)
@@ -169,10 +188,12 @@ def apply(root, workspace, files):
     manifest = json.loads((workspace / MANIFEST).read_text(encoding='utf-8'))
     if manifest.get('root') != str(root) or not isinstance(manifest.get('files'), dict):
         raise ValueError('invalid snapshot or workspace belongs to a different project')
+    with_preview = manifest.get('with_preview', False)
+    render_hashes = manifest.get('render_files')
     before = _files(root)
     if _hashes(before) != manifest['files']:
         raise ValueError('project inputs changed since prepare; create a fresh workspace')
-    if _hashes(_render_files(root)) != manifest.get('render_files'):
+    if _hashes(_render_files(root, with_preview=with_preview)) != render_hashes:
         raise ValueError('render inputs or outputs changed since prepare; create a fresh workspace')
     after = _files(workspace)
     if set(before) - set(after) or any(name not in before and not NOTE.fullmatch(name) for name in after):
@@ -212,13 +233,13 @@ def apply(root, workspace, files):
     errors = [issue for issue in issues if issue.severity == 'error']
     if errors:
         raise ValueError('candidate validation failed:\n' + '\n'.join(map(str, errors)))
-    if _files(root) != before or _hashes(_render_files(root)) != manifest['render_files']:
+    if _files(root) != before or _hashes(_render_files(root, with_preview=with_preview)) != render_hashes:
         raise ValueError('project inputs changed during validation; retry')
     written = []
     try:
         for name in sorted(changed):
             if (_files(root) != {**before, **{key: after[key] for key in written}}
-                    or _hashes(_render_files(root)) != manifest['render_files']):
+                    or _hashes(_render_files(root, with_preview=with_preview)) != render_hashes):
                 raise ValueError('project inputs changed during apply; retry')
             path = root / name
             path.parent.mkdir(parents=True, exist_ok=True)
@@ -226,7 +247,7 @@ def apply(root, workspace, files):
             _atomic_write(path, after[name], mode)
             written.append(name)
         expected = {**before, **{key: after[key] for key in written}}
-        if _files(root) != expected or _hashes(_render_files(root)) != manifest['render_files']:
+        if _files(root) != expected or _hashes(_render_files(root, with_preview=with_preview)) != render_hashes:
             raise ValueError('project inputs changed during apply; retry')
         manifest['applied_files'] = _hashes(expected)
         manifest_path = workspace / MANIFEST
@@ -259,7 +280,7 @@ def guard(root, workspace):
         raise ValueError('workspace has not applied changes to this project')
     if _hashes(_files(root)) != manifest['applied_files']:
         raise ValueError('project inputs changed since apply; do not build')
-    if _hashes(_render_files(root)) != manifest.get('render_files'):
+    if _hashes(_render_files(root, with_preview=manifest.get('with_preview', False))) != manifest.get('render_files'):
         raise ValueError('render inputs or output files changed since prepare; do not build')
 
 
@@ -270,12 +291,14 @@ def main(argv=None):
         command = sub.add_parser(action)
         command.add_argument('--root', type=Path, default=Path.cwd())
         command.add_argument('--workspace', type=Path, required=True)
-        if action == 'apply':
+        if action == 'prepare':
+            command.add_argument('--with-preview', action='store_true', help='copy the local build and test inputs')
+        elif action == 'apply':
             command.add_argument('--file', action='append', required=True, dest='files')
     args = parser.parse_args(argv)
     try:
         if args.action == 'prepare':
-            prepare(args.root, args.workspace)
+            prepare(args.root, args.workspace, with_preview=args.with_preview)
             print('Prepared candidate workspace:', args.workspace)
         elif args.action == 'apply':
             issues = apply(args.root, args.workspace, args.files)

@@ -1,8 +1,8 @@
 # Recent changes
 
-[← Home](../README.md) · [Scope](by-scope.md) · [Types](by-type.md) · [Status](by-status.md) · [Modalities](by-modality.md)
+[← Home](../README.md) · [Names](by-name.md) · [Scope](by-scope.md) · [Types](by-type.md) · [Status](by-status.md) · [Modalities](by-modality.md)
 
-Events within 90 days of 2026-11-17.
+Events within 90 days of 2026-11-18.
 
 - **2026-11-13** [AilsynBio](../cards/ailsynbio/README.md) · confirmed: Hansoh Shanghai subsidiary licensed AilsynBio platform use; aggregate payments may reach RMB 317 million. — Maximum cumulative payment, not received revenue; potential future royalties also apply.
 - **2026-11-09** [Peptway](../cards/peptway/README.md) · reported: Media reported an angel round of tens of millions of RMB. — Publication date; completion date and precise amount not disclosed.

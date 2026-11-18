@@ -1,0 +1,1 @@
+Viva Biotech’s interim results describe AI use in peptide research and discovery services. The company identifies Shanghai as its headquarters. [Interim results](https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0826/2026082600888_c.pdf) · [Company announcement](https://www.vivabiotech.com.cn/news/1201.html)

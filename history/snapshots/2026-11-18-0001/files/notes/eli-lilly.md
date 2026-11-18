@@ -1,0 +1,1 @@
+[Lilly's 2021 investor presentation](https://investor.lilly.com/static-files/250f223d-a0f9-431a-8c01-e78676daecf2) identifies tirzepatide as a peptide, and its [pipeline page](https://www.lilly.com/science/research-development/pipeline) lists the program. These sources establish peptide activity; they do not establish AI use in that program.

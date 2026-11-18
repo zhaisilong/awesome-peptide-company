@@ -1,0 +1,3 @@
+CSPC reports that its group will contribute its own AI peptide discovery platform in a collaboration with AstraZeneca. Its 29 May disclosure reports that it had received an upfront payment. AstraZeneca reported that the agreement closed on 14 April 2026. The agreement is at group level. [CSPC agreement](https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0130/2026013000102_c.pdf) · [AstraZeneca filing](https://www.sec.gov/Archives/edgar/data/901832/000110465926086846/R8.htm) · [Payment notice](https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0529/2026052902359_c.pdf)
+
+CSPC lists its headquarters in Shijiazhuang. [Company contacts](https://www.cspc.com.hk/en/contacts/contactus.php)

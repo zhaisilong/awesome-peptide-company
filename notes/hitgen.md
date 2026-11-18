@@ -1,0 +1,1 @@
+HitGen’s interim report identifies AI-related work on cyclic peptide-like compounds. The claim refers to the disclosed discovery activity. The company lists Chengdu as its headquarters. [Interim report](https://static.cninfo.com.cn/finalpage/2026-08-27/1225508326.PDF) · [Company overview](https://www.hitgen.com/en/about)

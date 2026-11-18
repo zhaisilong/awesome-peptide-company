@@ -11,10 +11,11 @@ from pathlib import Path
 
 from liquid import Template
 
-from .resolve import event_key, latest_date, interval_contains
+from .names import active_aliases, display_name, name_key
+from .resolve import event_key, latest_date
 
 BEGIN, END = "<!-- BEGIN:INDEX -->", "<!-- END:INDEX -->"
-INDEX_NAV = "[← Home](../README.md) · [Scope](by-scope.md) · [Types](by-type.md) · [Status](by-status.md) · [Modalities](by-modality.md)"
+INDEX_NAV = "[← Home](../README.md) · [Names](by-name.md) · [Scope](by-scope.md) · [Types](by-type.md) · [Status](by-status.md) · [Modalities](by-modality.md)"
 RESOLVED_COLUMNS = ["entity_id", "name", "entity_type", "inclusion", "parent_id", "peptide_relevance", "relevance_evidence_ids", "country", "hq_city", "website", "one_liner", "current_status", "status_since", "pending_flags", "last_verified", "needs_review", "successors", "predecessors"]
 INDEX_COLUMNS = ["entity_id", "name", "one_liner", "entity_type", "current_status", "loop_level", "peptide_relevance", "country", "last_verified"]
 
@@ -81,11 +82,11 @@ def _table(rows, headers, cols):
     return "\n".join(out) + "\n"
 
 
-def _anchor_link(eid, entities, prefix="../cards"):
+def _anchor_link(eid, entities, prefix="../cards", label=None):
     entity = entities.get(eid)
     if entity is None:
         return eid
-    name = entity.get("name") or eid
+    name = label or entity.get("name") or eid
     return f"[{name}]({prefix}/{eid}/README.md)" if entity.get("inclusion") == "full" else f"{name} (stub)"
 
 
@@ -131,6 +132,8 @@ def render(tables, resolved, as_of, readme, root, template_root=None):
     evidence = {row["evidence_id"]: row for row in tables.get("evidence", [])}
     asset_map = {row["asset_id"]: row for row in tables.get("assets", [])}
     full = sorted((e for e in resolved if e.get("inclusion") == "full"), key=lambda e: e["entity_id"])
+    aliases_by_entity = active_aliases(tables.get("aliases", []), as_of)
+    labels = {eid: display_name(entity, aliases_by_entity.get(eid, [])) for eid, entity in entities.items()}
     scope_tags = {r["entity_id"]: r for r in sorted(tables.get("tags", []), key=lambda r: (r.get("entity_id", ""), r.get("value", ""))) if r.get("facet") == "directory_scope"}
     scope_rows = [{"entity_id": e["entity_id"], "name": e.get("name", ""),
                    "directory_scope": scope_tags.get(e["entity_id"], {}).get("value", "unassessed"),
@@ -168,7 +171,8 @@ def render(tables, resolved, as_of, readme, root, template_root=None):
                 metadata.append(row["country"])
             if row.get("pending_flags"):
                 metadata.append("⚠ Report pending confirmation")
-            indexlines.append("- **" + _anchor_link(row["entity_id"], entities, "cards") + "**<br>")
+            eid = row["entity_id"]
+            indexlines.append("- **" + _anchor_link(eid, entities, "cards", labels[eid]) + "**<br>")
             if row.get("one_liner"):
                 indexlines.append("  " + row["one_liner"] + "<br>")
             indexlines.append("  " + " · ".join(metadata))
@@ -182,7 +186,7 @@ def render(tables, resolved, as_of, readme, root, template_root=None):
     for e in full:
         eid = e["entity_id"]
         own_events = [ev for ev in events if ev.get("entity_id") == eid]
-        aliases = sorted([r.get("alias", "") for r in tables.get("aliases", []) if r.get("entity_id") == eid and interval_contains(r.get("valid_from", ""), r.get("valid_to", ""), as_of)])
+        aliases = [row["alias"] for row in aliases_by_entity.get(eid, [])]
         loop = latest_loop.get(eid)
         banner = ""
         if e["pending_flags"] or e["current_status"] not in {"active", "unknown"}:
@@ -254,16 +258,24 @@ def render(tables, resolved, as_of, readme, root, template_root=None):
             "**Loop:** " + (loop.get("level", "") + " · " + loop.get("evidence_level", "") + " · " + _display("review", loop.get("review_status")) if loop else "Not assessed"),
             ("**Region:** " + e["country"]) if e.get("country") else "",
         ]))
-        content = template.render(name=e.get("name", eid), one_liner=e.get("one_liner", ""), badges=badges, banner=banner, overview=overview, relevance=relevance, loop=looptext, assets="\n".join(asset_lines) or "No assets recorded.", timeline="\n".join(timeline) or "No events recorded.", parent_relations=parenttext, papers="\n".join(papers) or "No papers linked.", sources="\n".join(sources) or "No sources recorded.", notes=notes)
+        content = template.render(name=labels[eid], one_liner=e.get("one_liner", ""), badges=badges, banner=banner, overview=overview, relevance=relevance, loop=looptext, assets="\n".join(asset_lines) or "No assets recorded.", timeline="\n".join(timeline) or "No events recorded.", parent_relations=parenttext, papers="\n".join(papers) or "No papers linked.", sources="\n".join(sources) or "No sources recorded.", notes=notes)
         out[f"cards/{eid}/README.md"] = (content.rstrip() + "\n").encode("utf-8")
     def grouped(filename, title, group_rows, category=None):
         lines = [f"# {title}", "", INDEX_NAV, ""]
         for key in sorted(group_rows):
             label = _display(category, key) if category else (key or 'Not specified')
             lines.extend([f"## {label}", ""])
-            lines.extend(f"- {_anchor_link(eid, entities)}" for eid in sorted(group_rows[key]))
+            lines.extend(f"- {_anchor_link(eid, entities, label=labels[eid])}" for eid in sorted(group_rows[key]))
             lines.append("")
         out["index/" + filename] = ("\n".join(lines).rstrip() + "\n").encode("utf-8")
+
+    name_rows = []
+    for entity in sorted(full, key=lambda row: (name_key(row.get("name") or ""), row["entity_id"])):
+        eid = entity["entity_id"]
+        aliases = [row["alias"] for row in aliases_by_entity.get(eid, []) if row.get("kind") != "preferred_zh"]
+        name_rows.append({"name": _anchor_link(eid, entities, label=labels[eid]), "aliases": ", ".join(aliases), "id": f"`{eid}`"})
+    name_table = _table(name_rows, ["Organization", "Other names", "Entity ID"], ["name", "aliases", "id"])
+    out["index/by-name.md"] = (f"# By name / 按名称\n\n{INDEX_NAV}\n\n" + name_table).encode("utf-8")
 
     groups = defaultdict(set)
     for e in full:

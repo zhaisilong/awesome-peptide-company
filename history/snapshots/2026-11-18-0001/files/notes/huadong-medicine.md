@@ -1,0 +1,1 @@
+The annual report says the company’s AI platform supports several therapeutic modalities including peptides. The referenced disclosure does not identify each peptide project. [Annual report](https://static.cninfo.com.cn/finalpage/2026-04-24/1225168701.PDF)

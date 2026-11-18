@@ -1,0 +1,1 @@
+Hybio names 深圳碳云智肽药物科技有限公司 as its co-development partner and attributes the AI research contribution to that company. The two companies are catalogued separately. [Hybio project announcement](https://static.cninfo.com.cn/finalpage/2026-09-11/1225556892.PDF) · [Agreement date in interim report](https://static.cninfo.com.cn/finalpage/2025-08-22/1224531866.PDF)

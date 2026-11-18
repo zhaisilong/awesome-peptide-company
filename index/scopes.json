@@ -6,6 +6,12 @@
     "evidence_ids": "hkex-20261113-hansoh-ailsynbio"
   },
   {
+    "entity_id": "aimedorig",
+    "name": "AIMEDORIG",
+    "directory_scope": "ai_peptide",
+    "evidence_ids": "aimedorig-company"
+  },
+  {
     "entity_id": "anew-labs",
     "name": "Anew Labs",
     "directory_scope": "ai_peptide",
@@ -36,6 +42,12 @@
     "evidence_ids": ""
   },
   {
+    "entity_id": "cspc-pharma",
+    "name": "CSPC Pharmaceutical Group",
+    "directory_scope": "ai_peptide",
+    "evidence_ids": "cspc-20260130-astrazeneca-peptides"
+  },
+  {
     "entity_id": "eli-lilly",
     "name": "Eli Lilly and Company",
     "directory_scope": "peptide_landscape",
@@ -60,6 +72,36 @@
     "evidence_ids": "hkex-20261113-hansoh-ailsynbio"
   },
   {
+    "entity_id": "hengrui-pharma",
+    "name": "Jiangsu Hengrui Pharmaceuticals",
+    "directory_scope": "ai_peptide",
+    "evidence_ids": "hengrui-2026-interim"
+  },
+  {
+    "entity_id": "hitgen",
+    "name": "HitGen",
+    "directory_scope": "ai_peptide",
+    "evidence_ids": "hitgen-2026-interim"
+  },
+  {
+    "entity_id": "huadong-medicine",
+    "name": "Huadong Medicine",
+    "directory_scope": "ai_peptide",
+    "evidence_ids": "huadong-2025-annual"
+  },
+  {
+    "entity_id": "hybio-pharmaceutical",
+    "name": "Hybio Pharmaceutical",
+    "directory_scope": "ai_peptide",
+    "evidence_ids": "hybio-20260911-tanyun-peptide"
+  },
+  {
+    "entity_id": "ligit",
+    "name": "LigIT",
+    "directory_scope": "ai_peptide",
+    "evidence_ids": "lighthouse-20261010-ligit"
+  },
+  {
     "entity_id": "novartis",
     "name": "Novartis",
     "directory_scope": "ai_peptide",
@@ -72,15 +114,57 @@
     "evidence_ids": "novo-annual-2025-peptides"
   },
   {
+    "entity_id": "pepstar-therapeutics",
+    "name": "PepStar Therapeutics Limited",
+    "directory_scope": "peptide_landscape",
+    "evidence_ids": "gilead-20261022-pepstar-agreement"
+  },
+  {
+    "entity_id": "peptiorigin",
+    "name": "PeptiOrigin",
+    "directory_scope": "ai_peptide",
+    "evidence_ids": "hkustgz-20260518-peptiorigin"
+  },
+  {
     "entity_id": "peptway",
     "name": "Peptway",
     "directory_scope": "ai_peptide",
     "evidence_ids": "peptway-about"
   },
   {
+    "entity_id": "ql-biopharm",
+    "name": "Beijing QL Biopharmaceutical",
+    "directory_scope": "peptide_landscape",
+    "evidence_ids": "ql-biopharm-20260424-application"
+  },
+  {
+    "entity_id": "shanghai-pharmaceuticals",
+    "name": "Shanghai Pharmaceuticals Holding",
+    "directory_scope": "ai_peptide",
+    "evidence_ids": "shanghai-pharma-2025-annual"
+  },
+  {
     "entity_id": "syneron-bio",
     "name": "Syneron Bio",
     "directory_scope": "ai_peptide",
     "evidence_ids": "cls-20260518-syneron-ai"
+  },
+  {
+    "entity_id": "tanyun-zhitai",
+    "name": "碳云智肽",
+    "directory_scope": "ai_peptide",
+    "evidence_ids": "hybio-20260911-tanyun-peptide"
+  },
+  {
+    "entity_id": "viva-biotech",
+    "name": "Viva Biotech",
+    "directory_scope": "ai_peptide",
+    "evidence_ids": "viva-2026-interim-results"
+  },
+  {
+    "entity_id": "xtalpi",
+    "name": "XtalPi Holdings",
+    "directory_scope": "ai_peptide",
+    "evidence_ids": "xtalpi-pepix"
   }
 ]

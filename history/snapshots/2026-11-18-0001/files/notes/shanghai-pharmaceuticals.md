@@ -1,0 +1,1 @@
+The company’s results report describes actual application of its AI cyclic peptide platform in its research. The public disclosure is at group level. [Annual results announcement](https://www.hkexnews.hk/listedco/listconews/sehk/2026/0330/2026033001955_c.pdf)

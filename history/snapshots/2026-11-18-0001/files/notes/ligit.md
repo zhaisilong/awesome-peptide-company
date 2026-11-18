@@ -1,0 +1,1 @@
+The financing adviser’s signed announcement describes LigIT’s peptide focus and use of AI. It is a statement by a transaction participant about the company’s stated direction. [Financing adviser announcement](https://www.36kr.com/p/4019481828628101)

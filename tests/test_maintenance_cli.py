@@ -11,9 +11,9 @@ from awepep_co.cli import main
 ROOT = Path(__file__).resolve().parents[1]
 
 
-def project(tmp_path):
+def project(tmp_path, source=ROOT):
     for name in ("data", "vocab"):
-        shutil.copytree(ROOT / name, tmp_path / name)
+        shutil.copytree(source / name, tmp_path / name)
     return tmp_path
 
 
@@ -46,7 +46,8 @@ def test_add_invalid_arguments_return_error_without_writing(tmp_path, capsys):
 
 
 def test_stale_cli_uses_threshold_as_of_and_readonly_data(tmp_path, capsys):
-    root = project(tmp_path)
+    snapshot = ROOT / "history/snapshots/2026-11-17-0002/files"
+    root = project(tmp_path, snapshot)
     before = {p.name: p.read_bytes() for p in (root / "data").glob("*.csv")}
     assert main(["stale", "--root", str(root), "--as-of", "2026-11-17", "--days", "365"]) == 0
     assert "No organizations need review." in capsys.readouterr().out

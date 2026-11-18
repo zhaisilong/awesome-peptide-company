@@ -34,13 +34,17 @@ def latest_date(event):
         return date.min
 
 
+def interval_bounds(start, end):
+    """Return the inclusive bounds for the known part of a validity window."""
+    earliest = latest_date({"date": start}) if start else date.min
+    latest = event_key({"date": end})[0] if end else date.max
+    return earliest, latest
+
+
 def interval_contains(start, end, as_of):
     """Conservatively require validity throughout any uncertain date range."""
-    if start and latest_date({"date": start}) > as_of:
-        return False
-    if end and event_key({"date": end})[0] < as_of:
-        return False
-    return True
+    earliest, latest = interval_bounds(start, end)
+    return earliest <= as_of <= latest
 
 
 def tables_as_of(tables, as_of):

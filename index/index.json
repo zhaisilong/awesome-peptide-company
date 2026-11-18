@@ -11,6 +11,17 @@
     "last_verified": "2026-11-17"
   },
   {
+    "entity_id": "aimedorig",
+    "name": "AIMEDORIG",
+    "one_liner": "AIMEDORIG describes an AI-driven peptide and protein drug discovery business.",
+    "entity_type": "ai_native_biotech",
+    "current_status": "unknown",
+    "loop_level": "Not assessed",
+    "peptide_relevance": "core",
+    "country": "",
+    "last_verified": "2026-11-18"
+  },
+  {
     "entity_id": "anew-labs",
     "name": "Anew Labs",
     "one_liner": "AI drug discovery company with peptide-related research and experimental programmes.",
@@ -66,6 +77,17 @@
     "last_verified": "2026-11-17"
   },
   {
+    "entity_id": "cspc-pharma",
+    "name": "CSPC Pharmaceutical Group",
+    "one_liner": "CSPC disclosed a peptide research and licensing agreement with AstraZeneca using a CSPC group AI platform.",
+    "entity_type": "pharma_company",
+    "current_status": "active",
+    "loop_level": "Not assessed",
+    "peptide_relevance": "adjacent",
+    "country": "CN",
+    "last_verified": "2026-11-18"
+  },
+  {
     "entity_id": "eli-lilly",
     "name": "Eli Lilly and Company",
     "one_liner": "Eli Lilly develops peptide medicines, including tirzepatide.",
@@ -85,7 +107,7 @@
     "loop_level": "Not assessed",
     "peptide_relevance": "adjacent",
     "country": "",
-    "last_verified": "2026-11-17"
+    "last_verified": "2026-11-18"
   },
   {
     "entity_id": "gilead-sciences",
@@ -107,7 +129,62 @@
     "loop_level": "Not assessed",
     "peptide_relevance": "adjacent",
     "country": "",
-    "last_verified": "2026-11-17"
+    "last_verified": "2026-11-18"
+  },
+  {
+    "entity_id": "hengrui-pharma",
+    "name": "Jiangsu Hengrui Pharmaceuticals",
+    "one_liner": "Hengrui reports applying AI to peptide design within its drug research operations.",
+    "entity_type": "pharma_company",
+    "current_status": "unknown",
+    "loop_level": "Not assessed",
+    "peptide_relevance": "adjacent",
+    "country": "CN",
+    "last_verified": "2026-11-18"
+  },
+  {
+    "entity_id": "hitgen",
+    "name": "HitGen",
+    "one_liner": "HitGen reports using AI in discovery work involving cyclic peptide-like compounds.",
+    "entity_type": "platform_vendor",
+    "current_status": "unknown",
+    "loop_level": "Not assessed",
+    "peptide_relevance": "infrastructure",
+    "country": "CN",
+    "last_verified": "2026-11-18"
+  },
+  {
+    "entity_id": "huadong-medicine",
+    "name": "Huadong Medicine",
+    "one_liner": "Huadong Medicine reports AI-assisted drug discovery supporting research projects that include peptides.",
+    "entity_type": "pharma_company",
+    "current_status": "unknown",
+    "loop_level": "Not assessed",
+    "peptide_relevance": "adjacent",
+    "country": "CN",
+    "last_verified": "2026-11-18"
+  },
+  {
+    "entity_id": "hybio-pharmaceutical",
+    "name": "Hybio Pharmaceutical",
+    "one_liner": "Hybio and 碳云智肽 are collaborating on peptide drug development, with Hybio responsible for development.",
+    "entity_type": "pharma_company",
+    "current_status": "active",
+    "loop_level": "Not assessed",
+    "peptide_relevance": "core",
+    "country": "CN",
+    "last_verified": "2026-11-18"
+  },
+  {
+    "entity_id": "ligit",
+    "name": "LigIT",
+    "one_liner": "LigIT’s financing adviser describes a company focused on AI-enabled peptide drug discovery.",
+    "entity_type": "ai_native_biotech",
+    "current_status": "unknown",
+    "loop_level": "Not assessed",
+    "peptide_relevance": "core",
+    "country": "",
+    "last_verified": "2026-11-18"
   },
   {
     "entity_id": "novartis",
@@ -132,6 +209,28 @@
     "last_verified": "2026-11-17"
   },
   {
+    "entity_id": "pepstar-therapeutics",
+    "name": "PepStar Therapeutics Limited",
+    "one_liner": "Gilead identifies PepStar Therapeutics as the original developer of a Phase I peptide candidate.",
+    "entity_type": "peptide_therapeutics",
+    "current_status": "unknown",
+    "loop_level": "Not assessed",
+    "peptide_relevance": "core",
+    "country": "",
+    "last_verified": "2026-11-18"
+  },
+  {
+    "entity_id": "peptiorigin",
+    "name": "PeptiOrigin",
+    "one_liner": "PeptiOrigin signed a joint AI peptide research lab agreement with HKUST (Guangzhou).",
+    "entity_type": "ai_native_biotech",
+    "current_status": "unknown",
+    "loop_level": "Not assessed",
+    "peptide_relevance": "core",
+    "country": "",
+    "last_verified": "2026-11-18"
+  },
+  {
     "entity_id": "peptway",
     "name": "Peptway",
     "one_liner": "Hangzhou biotechnology company reporting AI-enabled peptide research.",
@@ -143,6 +242,28 @@
     "last_verified": "2026-11-17"
   },
   {
+    "entity_id": "ql-biopharm",
+    "name": "Beijing QL Biopharmaceutical",
+    "one_liner": "QL Biopharm reports clinical-stage peptide programs, including a Phase III study.",
+    "entity_type": "peptide_therapeutics",
+    "current_status": "unknown",
+    "loop_level": "Not assessed",
+    "peptide_relevance": "core",
+    "country": "CN",
+    "last_verified": "2026-11-18"
+  },
+  {
+    "entity_id": "shanghai-pharmaceuticals",
+    "name": "Shanghai Pharmaceuticals Holding",
+    "one_liner": "Shanghai Pharmaceuticals reports applying an AI platform to cyclic peptide discovery.",
+    "entity_type": "pharma_company",
+    "current_status": "unknown",
+    "loop_level": "Not assessed",
+    "peptide_relevance": "adjacent",
+    "country": "CN",
+    "last_verified": "2026-11-18"
+  },
+  {
     "entity_id": "syneron-bio",
     "name": "Syneron Bio",
     "one_liner": "Macrocyclic peptide company with the Synova platform and an AstraZeneca collaboration.",
@@ -152,5 +273,38 @@
     "peptide_relevance": "core",
     "country": "CN",
     "last_verified": "2026-11-17"
+  },
+  {
+    "entity_id": "tanyun-zhitai",
+    "name": "碳云智肽",
+    "one_liner": "碳云智肽 contributes AI to a joint peptide program with Hybio Pharmaceutical.",
+    "entity_type": "ai_native_biotech",
+    "current_status": "unknown",
+    "loop_level": "Not assessed",
+    "peptide_relevance": "core",
+    "country": "",
+    "last_verified": "2026-11-18"
+  },
+  {
+    "entity_id": "viva-biotech",
+    "name": "Viva Biotech",
+    "one_liner": "Viva Biotech reports an AI-enabled peptide drug discovery service.",
+    "entity_type": "platform_vendor",
+    "current_status": "unknown",
+    "loop_level": "Not assessed",
+    "peptide_relevance": "infrastructure",
+    "country": "CN",
+    "last_verified": "2026-11-18"
+  },
+  {
+    "entity_id": "xtalpi",
+    "name": "XtalPi Holdings",
+    "one_liner": "XtalPi provides an AI peptide discovery platform and reports a research and licensing agreement with Gan & Lee.",
+    "entity_type": "platform_vendor",
+    "current_status": "active",
+    "loop_level": "Not assessed",
+    "peptide_relevance": "infrastructure",
+    "country": "CN",
+    "last_verified": "2026-11-18"
   }
 ]

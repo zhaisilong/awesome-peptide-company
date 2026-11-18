@@ -2,6 +2,7 @@ import csv
 import importlib.util
 import shutil
 import subprocess
+import sys
 from datetime import date
 from pathlib import Path
 
@@ -71,6 +72,13 @@ def test_complete_curation_workflow_records_snapshot_before_validation(tmp_path)
     for directory in ('data', 'vocab', 'schema', 'notes', 'docs', 'templates', 'assets', 'awepep_co'):
         shutil.copytree(ROOT / directory, root / directory, ignore=shutil.ignore_patterns('__pycache__', '*.pyc'))
     shutil.copy(ROOT / 'README.md', root / 'README.md')
+    shutil.copy(ROOT / 'pyproject.toml', root / 'pyproject.toml')
+    test_file = Path('tests/fixtures/entities.csv')
+    (root / test_file).parent.mkdir(parents=True)
+    shutil.copy(ROOT / test_file, root / test_file)
+    skill_script = SCRIPT.relative_to(ROOT)
+    (root / skill_script).parent.mkdir(parents=True)
+    shutil.copy(SCRIPT, root / skill_script)
     today = date.today().isoformat()
     (root / '.build-date').write_text(today + '\n', encoding='utf-8')
     assert main(['history', 'record', '--root', str(root), '--reason', 'baseline']) == 0
@@ -81,19 +89,33 @@ def test_complete_curation_workflow_records_snapshot_before_validation(tmp_path)
                     'commit', '-qm', 'baseline'], cwd=root, check=True)
 
     workspace = tmp_path / 'candidate'
-    tx.prepare(root, workspace)
+    assert tx.main(['prepare', '--with-preview', '--root', str(root), '--workspace', str(workspace)]) == 0
+    for file in (test_file, skill_script, Path('pyproject.toml')):
+        assert (workspace / file).read_bytes() == (root / file).read_bytes()
+    assert not (workspace / '.git').exists()
+    assert not (workspace / 'build').exists()
+    card = Path('cards/anew-labs/README.md')
+    original_card = (root / card).read_bytes()
+    assert (workspace / card).read_bytes() == original_card
     edit_entity(workspace)
-    for directory in ('docs', 'templates', 'assets', 'cards', 'index', 'history'):
-        shutil.copytree(root / directory, workspace / directory)
-    shutil.copy(root / 'README.md', workspace / 'README.md')
-    shutil.copytree(root / 'awepep_co', workspace / 'awepep_co', dirs_exist_ok=True)
-    assert main(['history', 'record', '--root', str(workspace), '--reason', 'preview']) == 0
-    assert main(['history', 'check', '--root', str(workspace), '--require']) == 0
-    assert main(['build', '--root', str(workspace), '--as-of', today]) == 0
-    assert main(['build', '--root', str(workspace), '--as-of', today, '--check']) == 0
+    for args in (
+        ['history', 'record', '--reason', 'preview'],
+        ['history', 'check', '--require'],
+        ['build', '--as-of', today],
+        ['build', '--as-of', today, '--check'],
+    ):
+        subprocess.run([sys.executable, '-m', 'awepep_co', *args], cwd=workspace, check=True)
+    assert (root / card).read_bytes() == original_card
+    assert (workspace / card).read_bytes() != original_card
+
+    # The preview copies additional files, but they may not be applied.
+    with pytest.raises(ValueError, match='only source CSV'):
+        tx.apply(root, workspace, ['data/entities.csv', str(card)])
 
     tx.apply(root, workspace, ['data/entities.csv'])
     tx.guard(root, workspace)
+    assert (root / card).read_bytes() == original_card
+    assert len(list((root / 'history/snapshots').iterdir())) == 1
     # The previously documented ordering failed here: changed inputs have no real snapshot yet.
     assert main(['validate', '--root', str(root), '--base-ref', 'HEAD']) == 1
     assert main(['history', 'record', '--root', str(root), '--reason', 'curation']) == 0
@@ -102,6 +124,20 @@ def test_complete_curation_workflow_records_snapshot_before_validation(tmp_path)
     assert main(['build', '--root', str(root), '--as-of', today]) == 0
     assert main(['build', '--root', str(root), '--as-of', today, '--check']) == 0
     assert (root / 'cards/anew-labs/README.md').read_bytes() == (workspace / 'cards/anew-labs/README.md').read_bytes()
+
+
+def test_preview_detects_changed_test_input_before_apply(project, tmp_path):
+    test_file = project / 'tests/test_example.py'
+    test_file.parent.mkdir()
+    test_file.write_text('def test_original(): pass\n', encoding='utf-8')
+    workspace = tmp_path / 'candidate'
+    tx.prepare(project, workspace, with_preview=True)
+    edit_entity(workspace)
+    original_entities = (project / 'data/entities.csv').read_bytes()
+    test_file.write_text('def test_changed(): pass\n', encoding='utf-8')
+    with pytest.raises(ValueError, match='render inputs or outputs changed'):
+        tx.apply(project, workspace, ['data/entities.csv'])
+    assert (project / 'data/entities.csv').read_bytes() == original_entities
 
 
 @pytest.mark.parametrize('field,value', [
